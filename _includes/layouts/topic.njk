@@ -1,0 +1,55 @@
+{% set locale = localizedPage.locale if localizedPage else defaultLocale %}
+{% set localizedTopic = localizedPage.topic if localizedPage else none %}
+{% set currentUrl = localizedTopic.url if localizedTopic else (page.fileSlug + '.html' if topicScript else 'index.html') %}
+{% set assetPrefix = '../' if locale.prefix else '' %}
+<!doctype html>
+<html lang="{{ locale.code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  {% if description %}<meta name="description" content="{{ description }}">{% endif %}
+  <link rel="stylesheet" href="{{ assetPrefix }}assets/css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}assets/css/site.css">
+  {% if topicScript or localizedTopic %}
+  <script defer src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  {% if localizedTopic %}<script>window.topicData = {{ localizedTopic | jsonForScript | safe }};</script>{% else %}<script defer src="assets/js/topics/{{ topicScript }}.js"></script>{% endif %}
+  <script>window.siteStrings = {{ locale.ui | jsonForScript | safe }};</script>
+  <script defer src="{{ assetPrefix }}assets/js/steps.js"></script>
+  {% endif %}
+</head>
+<body>
+  <div class="site-layout">
+    <aside class="sidebar">
+      <div class="sidebar-menu sidebar-desktop">
+        <div class="sidebar-heading">
+          <div><p class="sidebar-eyebrow">{{ locale.ui.guide }}</p><h2 class="sidebar-title">{{ locale.ui.explore }}</h2></div>
+          <span class="sidebar-count">{{ locale.topics | length }} {{ locale.ui.count }}</span>
+        </div>
+        {% include "parts/navigation.njk" %}
+      </div>
+      <details class="sidebar-menu sidebar-mobile">
+        <summary><span class="mobile-menu-icon" aria-hidden="true"><span></span></span><span>{{ locale.ui.topics }}</span><span class="sidebar-current">{{ localizedTopic.label or (heading if topicScript else locale.ui.home) }}</span></summary>
+        {% include "parts/navigation.njk" %}
+      </details>
+    </aside>
+    <div class="page-content">
+      <header>
+        <div class="language-switch" aria-label="{{ locale.ui.language }}">
+          {% for language in locales %}
+            {% set available = currentUrl == 'index.html' %}
+            {% for item in language.topics %}{% if item.url == currentUrl %}{% set available = true %}{% endif %}{% endfor %}
+            {% if available %}
+              {% if language.code == locale.code %}<span aria-current="true" lang="{{ language.code }}">{{ language.name }}</span>{% else %}<a href="{{ assetPrefix }}{{ (language.prefix + '/') if language.prefix else '' }}{{ currentUrl }}" lang="{{ language.code }}">{{ language.name }}</a>{% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        <h1>{{ heading }}</h1>
+        <p class="lead">{{ lead | safe }}</p>
+      </header>
+      {{ content | safe }}
+      <footer>{{ footer | safe }}</footer>
+    </div>
+  </div>
+</body>
+</html>

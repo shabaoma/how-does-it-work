@@ -1,0 +1,8 @@
+<nav class="site" aria-label="{{ locale.ui.navigation }}">
+  <a class="site-home" href="index.html"{% if currentUrl == 'index.html' %} aria-current="page"{% endif %}><span class="home-icon" aria-hidden="true">⌂</span>{{ locale.ui.home }}</a>
+  {% for category, entries in locale.topics | groupby('category') %}
+  <div class="site-group"><span class="site-category">{{ category }}</span><div class="site-links">
+    {% for topic in entries %}<a href="{{ topic.url }}"{% if currentUrl == topic.url %} aria-current="page"{% endif %}>{{ topic.label }}</a>{% endfor %}
+  </div></div>
+  {% endfor %}
+</nav>

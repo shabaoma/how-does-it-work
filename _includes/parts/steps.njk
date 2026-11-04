@@ -1,0 +1,20 @@
+{% set locale = locale or defaultLocale %}
+<div class="step-heading"><h2>{{ locale.ui.steps }}</h2><p id="step-progress" aria-live="polite" aria-atomic="true"></p></div>
+<div class="steps" id="steps" role="group" aria-label="{{ locale.ui.flowSteps }}"></div>
+<div class="navs">
+  <button class="nav" id="prev" type="button">{{ locale.ui.previous }}</button>
+  <button class="nav" id="next" type="button">{{ locale.ui.next }}</button>
+</div>
+<div class="layout">
+  <section class="panel" aria-labelledby="step-title">
+    <p class="kicker" id="kicker"></p>
+    <h2 id="step-title"></h2>
+    <div class="diagram" id="sequence" aria-busy="true"></div>
+  </section>
+  <section class="panel" aria-labelledby="detail-title">
+    <h2 id="detail-title">{{ locale.ui.detail }}</h2>
+    <p id="detail"></p>
+    {% if hasTokens %}<div class="tokens" id="tokens"></div>{% endif %}
+    <div class="callout" id="note"></div>
+  </section>
+</div>

@@ -1,0 +1,37 @@
+---
+layout: layouts/topic.njk
+pagination:
+  data: localizedPages
+  size: 1
+  alias: localizedPage
+permalink: "{{ localizedPage.url }}"
+eleventyComputed:
+  title: "{{ localizedPage.topic.title or localizedPage.locale.home.title }}"
+  heading: "{{ localizedPage.topic.title or localizedPage.locale.home.title }}"
+  lead: "{{ localizedPage.topic.lead or localizedPage.locale.home.lead }}"
+  description: "{{ localizedPage.topic.description or localizedPage.locale.home.description }}"
+  footer: "{{ localizedPage.topic.footer or localizedPage.locale.home.footer }}"
+---
+{% set locale = localizedPage.locale %}
+{% set localizedTopic = localizedPage.topic %}
+<main>
+  {% if localizedTopic %}
+  <section class="panel">
+    <p class="kicker">OVERVIEW</p>
+    <h2>{{ locale.ui.overview }}</h2>
+    <div class="diagram mermaid">{{ localizedTopic.overview }}</div>
+    <p class="callout">{{ localizedTopic.overviewNote }}</p>
+  </section>
+  {% include "parts/steps.njk" %}
+  <section class="panel supplement"><h2>{{ locale.ui.boundaries }}</h2><p>{{ localizedTopic.extra }}</p></section>
+  {% else %}
+  {% for category, entries in locale.topics | groupby('category') %}
+  <section class="topic-group" aria-labelledby="category-{{ loop.index }}">
+    <h2 id="category-{{ loop.index }}">{{ category }}</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 topic-grid">
+      {% for topic in entries %}<div class="col"><a class="panel topic-card" href="{{ topic.url }}"><h3>{{ topic.title }}</h3><p>{{ topic.description }}</p><span>{{ locale.ui.exploreFlow }}</span></a></div>{% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+  {% endif %}
+</main>
