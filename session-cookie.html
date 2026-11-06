@@ -78,8 +78,9 @@
 <body>
 <header>
   <nav class="site">
-    <a href="index.html">Access / Secret</a>
+    <a href="access-secret-token.html">Access / Secret</a>
     <a href="session-cookie.html" aria-current="page">Session Cookie</a>
+    <a href="email-code.html">邮箱验证码</a>
   </nav>
   <h1>Session Cookie 登录</h1>
   <p class="lead">浏览器登录的常见做法。服务器保存「这次登录是谁」，响应里用 <code>Set-Cookie</code> 交给浏览器一个不透明的 session id。之后同站请求由浏览器自动带上 <code>Cookie</code>，服务器用这个 id 查回用户。页面脚本不必自己把令牌抄进 <code>Authorization</code>。</p>
@@ -135,7 +136,7 @@
     <p class="callout"><code>HttpOnly</code> 让页面脚本读不到这份 cookie。<code>Secure</code> 只在 HTTPS 下发送。<code>SameSite=Lax</code> 让别的网站发起的请求默认不带上它，用来减轻跨站请求伪造。真正让登录失效的是服务器删掉 session，cookie 只是那把查表用的编号。</p>
   </section>
 </main>
-<footer>这是浏览器 Session Cookie 的一般过程。令牌登录见 <a href="index.html">Access token 与 Secret token</a>。</footer>
+<footer>这是浏览器 Session Cookie 的一般过程。令牌登录见 <a href="access-secret-token.html">Access token 与 Secret token</a>。</footer>
 <script>
 const steps = [
   {
