@@ -66,7 +66,7 @@
   th, td { text-align: left; vertical-align: top; padding: 8px 8px; border-bottom: 1px solid var(--line); }
   th { color: var(--muted); font-weight: 600; }
   footer { width: min(1100px, calc(100% - 32px)); margin: 18px auto 32px; color: var(--muted); font-size: 13px; }
-  nav.site { display: flex; gap: 8px; margin: 0 0 14px; }
+  nav.site { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
   nav.site a {
     color: var(--ink); text-decoration: none; border: 1px solid var(--line);
     background: var(--card); border-radius: 999px; padding: 4px 12px; font-size: 14px;
@@ -81,6 +81,7 @@
     <a href="access-secret-token.html">Access / Secret</a>
     <a href="session-cookie.html" aria-current="page">Session Cookie</a>
     <a href="email-code.html">邮箱验证码</a>
+    <a href="3d-secure.html">3D Secure</a>
   </nav>
   <h1>Session Cookie 登录</h1>
   <p class="lead">浏览器登录的常见做法。服务器保存「这次登录是谁」，响应里用 <code>Set-Cookie</code> 交给浏览器一个不透明的 session id。之后同站请求由浏览器自动带上 <code>Cookie</code>，服务器用这个 id 查回用户。页面脚本不必自己把令牌抄进 <code>Authorization</code>。</p>

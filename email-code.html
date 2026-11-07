@@ -66,7 +66,7 @@
   th, td { text-align: left; vertical-align: top; padding: 8px 8px; border-bottom: 1px solid var(--line); }
   th { color: var(--muted); font-weight: 600; }
   footer { width: min(1100px, calc(100% - 32px)); margin: 18px auto 32px; color: var(--muted); font-size: 13px; }
-  nav.site { display: flex; gap: 8px; margin: 0 0 14px; }
+  nav.site { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
   nav.site a {
     color: var(--ink); text-decoration: none; border: 1px solid var(--line);
     background: var(--card); border-radius: 999px; padding: 4px 12px; font-size: 14px;
@@ -88,6 +88,7 @@
     <a href="access-secret-token.html">Access / Secret</a>
     <a href="session-cookie.html">Session Cookie</a>
     <a href="email-code.html" aria-current="page">邮箱验证码</a>
+    <a href="3d-secure.html">3D Secure</a>
   </nav>
   <h1>邮箱验证码登录</h1>
   <p class="lead">这是一种无密码登录：用户输入邮箱，服务端发送一次性验证码；用户把验证码填回来，服务端验证通过后建立登录状态。邮箱地址用来找到账号，能收到并填写验证码用来证明当前能够访问该邮箱。</p>

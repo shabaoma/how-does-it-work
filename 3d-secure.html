@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D Secure 在线支付认证</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --ink: #1c2430;
+    --muted: #5c6775;
+    --line: #d9d2c5;
+    --card: #fffdf8;
+    --accent: #1f6b4a;
+    --accent-soft: #e5f3eb;
+    --amber: #8a5a12;
+    --amber-soft: #f8ecd6;
+    --blue: #1d4e89;
+    --blue-soft: #e7f0fa;
+    --rose: #8d3044;
+    --rose-soft: #f8e8ec;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 16px/1.55 "Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC", serif;
+    color: var(--ink);
+    background: var(--bg);
+  }
+  header, main { width: min(1100px, calc(100% - 32px)); margin: 0 auto; }
+  header { padding: 28px 0 8px; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; font-weight: 650; }
+  .lead { margin: 0; color: var(--muted); max-width: 68ch; }
+  .steps { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0; }
+  button.step, button.nav {
+    font: inherit; cursor: pointer;
+    border: 1px solid var(--line); background: var(--card);
+    border-radius: 999px; padding: 6px 12px; color: var(--ink);
+  }
+  button.step[aria-current="step"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .navs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .layout { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 16px; align-items: start; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 16px; padding: 16px 18px 18px;
+  }
+  .panel h2 { font-size: 18px; margin: 0 0 8px; }
+  .kicker { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; letter-spacing: 0.04em; color: var(--accent); margin: 0 0 6px; }
+  .mermaid { overflow-x: auto; }
+  .tokens { display: grid; gap: 8px; margin-top: 12px; }
+  .token {
+    text-align: left; width: 100%; font: inherit; cursor: pointer;
+    border: 1px solid var(--line); background: #fff; border-radius: 12px; padding: 10px 12px;
+  }
+  .token[data-state="idle"] { opacity: 0.45; }
+  .token[data-state="live"] { border-color: #9ecfb6; background: var(--accent-soft); }
+  .token[data-state="focus"] { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(31,107,74,.15); }
+  .token[data-state="secret"] { border-color: #e2c48a; background: var(--amber-soft); }
+  .token b { display: block; font-size: 14px; }
+  .token span { display: block; color: var(--muted); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .callout { margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: var(--blue-soft); color: var(--blue); }
+  .callout.warn { background: var(--rose-soft); color: var(--rose); }
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 8px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; }
+  footer { width: min(1100px, calc(100% - 32px)); margin: 18px auto 32px; color: var(--muted); font-size: 13px; }
+  nav.site { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+  nav.site a {
+    color: var(--ink); text-decoration: none; border: 1px solid var(--line);
+    background: var(--card); border-radius: 999px; padding: 4px 12px; font-size: 14px;
+  }
+  nav.site a[aria-current="page"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em; }
+
+  .diagram { overflow-x: auto; }
+  .diagram svg { max-width: 100%; height: auto; }
+  .steps button:disabled, .navs button:disabled { opacity: .45; cursor: default; }
+  .panel + .panel { margin-top: 16px; }
+  .layout .panel + .panel { margin-top: 0; }
+  li { margin: 8px 0; }
+</style>
+</head>
+<body>
+<header>
+  <nav class="site" aria-label="主题导航">
+    <a href="access-secret-token.html">Access / Secret</a>
+    <a href="session-cookie.html">Session Cookie</a>
+    <a href="email-code.html">邮箱验证码</a>
+    <a href="3d-secure.html" aria-current="page">3D Secure</a>
+  </nav>
+  <h1>3D Secure 在线支付认证</h1>
+  <p class="lead">网上刷卡时，3D Secure（3DS）让商户通过卡组织向发卡银行请求持卡人认证。银行结合交易和设备信息判断风险，必要时让持卡人进一步验证。认证完成后，支付授权仍是另一步。</p>
+</header>
+<main>
+  <section class="panel">
+    <p class="kicker">THREE DOMAINS</p>
+    <h2>整体架构：三个域如何协作</h2>
+    <div class="diagram mermaid">
+flowchart LR
+    U[持卡人] -->|提交支付| M[商户 / 支付服务商<br/>收单域]
+    M -->|3DS 认证请求| DS[卡组织目录服务器<br/>互操作域]
+    DS -->|转发认证请求| ACS[发卡银行认证系统 ACS<br/>发卡域]
+    ACS -.->|必要时要求验证| U
+    ACS -->|认证结果| DS
+    DS -->|认证结果| M
+    M -->|随后发起支付授权| A[收单方 / 支付网络]
+    A -->|授权请求| I[发卡银行]
+    </div>
+    <p class="callout">3D 指三个域（Three Domains），不是三维图像。图中展示常见角色；支付服务商、3DS 服务和收单方的具体部署可能不同。</p>
+  </section>
+  <div class="steps" id="steps" aria-label="3DS 认证步骤"></div>
+  <div class="navs"><button class="nav" id="prev" type="button">上一步</button><button class="nav" id="next" type="button">下一步</button></div>
+  <div class="layout">
+    <section class="panel"><p class="kicker" id="kicker"></p><h2 id="title"></h2><div class="diagram" id="sequence"></div></section>
+    <section class="panel"><h2>这一步发生了什么</h2><p id="detail"></p><div class="callout" id="note"></div></section>
+  </div>
+  <section class="panel" style="margin-top:16px">
+    <h2>两种认证路径</h2>
+    <table>
+      <thead><tr><th>路径</th><th>银行做什么</th><th>持卡人看到什么</th></tr></thead>
+      <tbody>
+        <tr><th>无感认证<br>Frictionless</th><td>根据交易、设备等信息评估并给出认证结果。</td><td>通常无需额外操作；无感不代表没有风险判断。</td></tr>
+        <tr><th>交互认证<br>Challenge</th><td>要求额外验证，并根据验证结果返回状态。</td><td>可能需要在银行 App 确认，或按银行要求输入一次性验证码等。</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">具体认证方式由发卡银行及其支持的方案决定。无感与交互只是两条路径，不保证认证或支付一定成功。</p>
+  </section>
+  <section class="panel">
+    <h2>接入和理解时的关键边界</h2>
+    <ul>
+      <li><strong>认证不等于授权：</strong>3DS 认证关注持卡人认证；之后的支付授权由发卡银行另行决定，认证成功仍可能因为余额、限额或风控被拒绝。</li>
+      <li><strong>失败和中断：</strong>用户可能取消或验证失败，认证也可能不可用。商户应按支付服务商、卡组织规则和适用要求处理返回状态，不要把所有结果当作成功。</li>
+      <li><strong>结果需要传递：</strong>认证结果可能包含认证值、交易标识和电子商务指标（ECI）；后续授权按支付服务商及卡组织要求关联并传递相应数据。</li>
+      <li><strong>责任转移有条件：</strong>发生盗刷争议时是否适用责任转移，取决于卡组织规则、交易和认证结果，不能认为所有 3DS 交易都自动享有保障。</li>
+      <li><strong>防范钓鱼：</strong>3DS 可以降低盗刷风险，但无法阻止用户被骗交出验证码或确认不认识的交易。</li>
+    </ul>
+    <p>参考：<a href="https://www.emvco.com/emv-technologies/3-d-secure/">EMVCo：EMV 3-D Secure</a> · <a href="https://www.emvco.com/dynamic/emv-3-d-secure-whitepaper-v2/introduction/">EMVCo：3DS 白皮书</a></p>
+  </section>
+</main>
+<footer>3DS 是网上支付的持卡人认证流程；实际消息和处理方式以支付服务商及卡组织要求为准。</footer>
+<script>
+const steps = [
+  {label:'1 提交支付', kicker:'CHECKOUT', title:'持卡人发起网上支付', detail:'持卡人在商户页面提交卡片和订单信息。商户或支付服务商准备 3DS 认证请求，并按接入方式收集交易、浏览器或设备等必要信息。', note:'信息用于认证和风险判断；具体字段与收集方式取决于协议版本和支付服务商。', diagram:`sequenceDiagram
+    actor U as 持卡人
+    participant M as 商户页面
+    participant P as 支付服务商
+    U->>M: 提交卡片和订单
+    M->>P: 发起支付并准备认证
+    P->>P: 收集交易和设备信息`},
+  {label:'2 请求认证', kicker:'AUTHENTICATION REQUEST', title:'请求经过卡组织到达发卡银行', detail:'3DS 服务将认证请求经卡组织目录服务器（DS）路由至发卡银行的访问控制服务器（ACS）。ACS 结合收到的数据和银行自身信息评估风险。', note:'3DS 服务、DS 和 ACS 分别连接商户侧、卡组织和发卡行侧；ACS 决定如何处理认证。', diagram:`sequenceDiagram
+    participant S as 3DS 服务
+    participant D as 目录服务器 DS
+    participant A as 发卡行 ACS
+    S->>D: 认证请求 AReq
+    D->>A: 路由认证请求
+    A->>A: 评估交易和设备风险
+    A-->>D: 认证响应 ARes
+    D-->>S: 返回响应`},
+  {label:'3 银行判断', kicker:'FRICTIONLESS / CHALLENGE', title:'无感通过，或要求进一步验证', detail:'银行可能直接给出无感认证结果；如果需要进一步确认，则发起交互认证。用户按照银行要求在页面或银行 App 中完成验证，ACS 再返回认证结果。', note:'交互可能成功、失败或被用户中断；银行也可能返回其他认证状态。', diagram:`sequenceDiagram
+    participant S as 3DS 服务
+    participant A as 发卡行 ACS
+    actor U as 持卡人
+    alt 无感认证
+      A-->>S: 返回认证结果
+    else 需要交互认证
+      A-->>S: 要求进一步验证
+      A->>U: 展示验证或请求 App 确认
+      U->>A: 完成或取消验证
+      A-->>S: 返回最终认证结果
+    end`},
+  {label:'4 提交授权', kicker:'PAYMENT AUTHORISATION', title:'认证结果用于后续支付授权', detail:'商户或支付服务商根据认证状态和适用规则决定如何继续。需要发起支付时，经收单方和支付网络向发卡银行提交授权请求，并按要求携带或关联认证数据。', note:'认证失败、不可用或中断时，是否继续以及如何处理取决于适用规则和支付服务商的接入方式。', diagram:`sequenceDiagram
+    participant M as 商户 / 支付服务商
+    participant N as 收单方 / 支付网络
+    participant I as 发卡银行
+    M->>N: 授权请求及适用的认证数据
+    N->>I: 转发授权请求
+    I->>I: 判断余额、限额和风险
+    I-->>N: 批准或拒绝
+    N-->>M: 返回授权结果`},
+  {label:'5 显示结果', kicker:'PAYMENT RESULT', title:'商户向持卡人展示结果', detail:'发卡银行批准授权后，商户按支付服务商的结果继续订单处理；如果授权被拒绝，商户提示用户并提供适当的重试或其他支付方式。', note:'授权批准与最终清算、资金到账并不是同一个步骤；它们通常在后续处理。', diagram:`sequenceDiagram
+    participant I as 发卡银行
+    participant P as 支付服务商
+    participant M as 商户
+    actor U as 持卡人
+    I-->>P: 授权结果
+    P-->>M: 通知支付结果
+    M-->>U: 显示成功或失败`}
+];
+let current = 0;
+let renderVersion = 0;
+mermaid.initialize({startOnLoad:true, securityLevel:'strict', theme:'neutral'});
+async function showStep(index) {
+  current = index;
+  const step = steps[index];
+  document.getElementById('kicker').textContent = step.kicker;
+  document.getElementById('title').textContent = step.title;
+  document.getElementById('detail').textContent = step.detail;
+  document.getElementById('note').textContent = step.note;
+  document.querySelectorAll('#steps button').forEach((button, i) => {
+    if (i === index) button.setAttribute('aria-current', 'step');
+    else button.removeAttribute('aria-current');
+  });
+  document.getElementById('prev').disabled = index === 0;
+  document.getElementById('next').disabled = index === steps.length - 1;
+  const version = ++renderVersion;
+  const result = await mermaid.render('sequence-' + version, step.diagram);
+  if (version === renderVersion) document.getElementById('sequence').innerHTML = result.svg;
+}
+const container = document.getElementById('steps');
+steps.forEach((step, index) => {
+  const button = document.createElement('button');
+  button.type = 'button'; button.className = 'step'; button.textContent = step.label;
+  button.addEventListener('click', () => showStep(index)); container.appendChild(button);
+});
+document.getElementById('prev').addEventListener('click', () => showStep(current - 1));
+document.getElementById('next').addEventListener('click', () => showStep(current + 1));
+showStep(0);
+</script>
+</body>
+</html>
