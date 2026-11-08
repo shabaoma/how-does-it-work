@@ -113,7 +113,7 @@ button.step:hover:not([aria-current="step"]), button.nav:hover:not(:disabled) { 
 .navs { margin-bottom: 16px; }
 button.nav:not(:disabled) { color: var(--accent); border-color: var(--accent); }
 button.nav:disabled { opacity: 1; color: var(--muted); background: var(--bg); border-color: var(--line); }
-.layout > .panel { height: 100%; }
+.layout > .panel { height: auto; }
 .token:disabled { cursor: default; }
 .token:not(:disabled):hover { border-color: var(--accent); }
 .topic-group:first-child { margin-top: 0; }
@@ -152,3 +152,6 @@ button.nav:disabled { opacity: 1; color: var(--muted); background: var(--bg); bo
 .topic-group > h2 { margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
 .topic-group > h2::before { display: none; }
 .topic-card h3 { margin-bottom: 8px; }
+
+/* Show each step diagram in full without enlarging smaller diagrams. */
+#sequence svg { display: block; width: auto; max-width: 100%; }

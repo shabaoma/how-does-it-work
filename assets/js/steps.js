@@ -16,7 +16,8 @@
   if (window.mermaid) {
     mermaid.initialize({
       startOnLoad: true, securityLevel: 'strict', theme: 'base',
-      flowchart: { useMaxWidth: false }, sequence: { useMaxWidth: false },
+      flowchart: { useMaxWidth: false },
+      sequence: { useMaxWidth: false, actorMargin: 35, width: 120, height: 45, messageMargin: 25 },
       themeVariables: {
         fontFamily: '"Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC", serif',
         background: '#fffdf8', primaryColor: '#e5f3eb', primaryTextColor: '#1c2430',
