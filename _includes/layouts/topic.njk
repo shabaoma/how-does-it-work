@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  {% if description %}<meta name="description" content="{{ description }}">{% endif %}
+  <link rel="stylesheet" href="assets/css/site.css">
+  {% if topicScript %}
+  <script defer src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script defer src="assets/js/topics/{{ topicScript }}.js"></script>
+  <script defer src="assets/js/steps.js"></script>
+  {% endif %}
+</head>
+<body>
+  <header>
+    {% include "parts/navigation.njk" %}
+    <h1>{{ heading }}</h1>
+    <p class="lead">{{ lead | safe }}</p>
+  </header>
+  {{ content | safe }}
+  <footer>{{ footer | safe }}</footer>
+</body>
+</html>

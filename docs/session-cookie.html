@@ -1,0 +1,59 @@
+---
+layout: "layouts/topic.njk"
+title: "Session Cookie 登录"
+heading: "Session Cookie 登录"
+lead: "浏览器登录的常见做法。服务器保存「这次登录是谁」，响应里用 <code>Set-Cookie</code> 交给浏览器一个不透明的 session id。之后同站请求由浏览器自动带上 <code>Cookie</code>，服务器用这个 id 查回用户。页面脚本不必自己把令牌抄进 <code>Authorization</code>。"
+footer: "这是浏览器 Session Cookie 的一般过程。令牌登录见 <a href=\"access-secret-token.html\">Access token 与 Secret token</a>。"
+topicScript: "session-cookie"
+hasTokens: true
+permalink: "session-cookie.html"
+---
+<main>
+  <section class="panel">
+    <p class="kicker">SESSION FLOW</p>
+    <h2>整体流程：浏览器如何保持登录</h2>
+    <div class="diagram mermaid">
+flowchart LR
+    B[浏览器] -->|提交登录凭证| S[服务器]
+    S -->|保存登录会话| D[(Session 存储)]
+    S -->|Set-Cookie 返回会话编号| B
+    B -->|后续请求携带 Cookie| S
+    S -->|按编号查询会话| D
+    S -->|返回业务结果| B
+    </div>
+    <p class="callout">Cookie 携带会话编号；服务器通过会话存储确认登录状态。</p>
+  </section>
+
+  {% include "parts/steps.njk" %}
+  <section class="panel supplement">
+    <h2>session 和 cookie 各管一件事</h2>
+    <div class="table-scroll"><table>
+      <thead>
+        <tr><th></th><th>服务器上的 session</th><th>浏览器里的 cookie</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>存什么</th>
+          <td>用户 id、登录时间、过期时间。真正的登录状态在这里。</td>
+          <td>只存一个随机的 <code>sid</code>。用户资料不放进 cookie。</td>
+        </tr>
+        <tr>
+          <th>怎么出现</th>
+          <td>账号密码校验通过后写入存储，键就是这个 <code>sid</code>。</td>
+          <td>响应头 <code>Set-Cookie: sid=...; HttpOnly; Secure; Path=/; SameSite=Lax</code>。</td>
+        </tr>
+        <tr>
+          <th>下次请求</th>
+          <td>用请求头里的 <code>sid</code> 查表。查不到或已过期，就当作未登录。</td>
+          <td>域名、路径、过期时间都匹配时，浏览器自动加上 <code>Cookie: sid=...</code>。</td>
+        </tr>
+        <tr>
+          <th>登出</th>
+          <td>删掉这条记录。即使浏览器还带着旧 <code>sid</code>，查表也失败。</td>
+          <td>再回一条 <code>Set-Cookie: sid=; Max-Age=0</code>，让浏览器丢掉它。</td>
+        </tr>
+      </tbody>
+    </table></div>
+    <p class="callout"><code>HttpOnly</code> 让页面脚本读不到这份 cookie。<code>Secure</code> 只在 HTTPS 下发送。<code>SameSite=Lax</code> 限制部分跨站请求携带 cookie，以减轻跨站请求伪造；部分安全的顶层导航仍可能携带。真正让登录失效的是服务器删掉 session，cookie 只是那把查表用的编号。</p>
+  </section>
+</main>

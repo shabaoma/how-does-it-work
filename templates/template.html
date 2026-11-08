@@ -1,0 +1,44 @@
+---
+layout: "layouts/topic.njk"
+title: "页面模板：主题名称"
+heading: "主题名称（页面模板）"
+lead: "用两三句话介绍要解决的问题、主要参与方，以及理解流程所需的关键边界。下面的角色和步骤仅用于演示，复制后请全部替换。"
+footer: "本页展示示例流程；具体行为取决于实际协议和实现。"
+topicScript: "template"
+hasTokens: false
+permalink: "template.html"
+---
+<main>
+  <!-- Part 2：整体流程。使用 flowchart LR，说明主要角色和数据流。 -->
+  <section class="panel" aria-labelledby="overview-title">
+    <p class="kicker">OVERVIEW</p>
+    <h2 id="overview-title">整体流程：参与方如何协作</h2>
+    <div class="diagram mermaid">
+flowchart LR
+    U[用户] -->|发起操作| C[客户端]
+    C -->|发送请求| S[服务端]
+    S -->|读取或保存数据| D[(数据存储)]
+    S -->|返回结果| C
+    </div>
+    <p class="callout">补充一条有助于理解全图的范围或边界。</p>
+  </section>
+
+  <!-- Part 3：步骤按钮由 steps 数据生成；左右卡片随选择同步更新。 -->
+  {% include "parts/steps.njk" %}
+  <!-- Part 4：按主题需要保留或增减补充卡片；表格外层提供窄屏滚动。 -->
+  <section class="panel supplement" aria-labelledby="comparison-title">
+    <h2 id="comparison-title">关键概念对比</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th scope="col">比较项</th><th scope="col">概念 A</th><th scope="col">概念 B</th></tr></thead>
+        <tbody><tr><th scope="row">作用</th><td>说明概念 A 的作用。</td><td>说明概念 B 的作用。</td></tr></tbody>
+      </table>
+    </div>
+    <p class="callout">补充对比时容易混淆的边界。</p>
+  </section>
+  <section class="panel supplement" aria-labelledby="boundary-title">
+    <h2 id="boundary-title">理解时的关键边界</h2>
+    <ul><li><strong>边界名称：</strong>说明失败条件、实现差异或适用范围。</li></ul>
+    <!-- 有资料来源时，在此提供与具体事实对应的链接。 -->
+  </section>
+</main>

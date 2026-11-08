@@ -1,0 +1,5 @@
+<nav class="site" aria-label="主题导航">
+  <a href="index.html"{% if page.url == '/' or page.url == '/index.html' %} aria-current="page"{% endif %}>首页</a>
+  {% for topic in topics %}<a href="{{ topic.url }}"{% if page.url == '/' + topic.url %} aria-current="page"{% endif %}>{{ topic.label }}</a>
+  {% endfor %}
+</nav>

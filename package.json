@@ -1,0 +1,14 @@
+{
+  "name": "how-does-it-work",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "prebuild": "node -e \"require('fs').rmSync('dist', {recursive:true,force:true})\""
+  },
+  "description": "通过流程图和分步讲解理解技术",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.8"
+  },
+  "private": true
+}

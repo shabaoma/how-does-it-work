@@ -1,0 +1,18 @@
+<div class="steps" id="steps" role="group" aria-label="流程步骤"></div>
+<div class="navs">
+  <button class="nav" id="prev" type="button">上一步</button>
+  <button class="nav" id="next" type="button">下一步</button>
+</div>
+<div class="layout">
+  <section class="panel" aria-labelledby="step-title">
+    <p class="kicker" id="kicker"></p>
+    <h2 id="step-title"></h2>
+    <div class="diagram" id="sequence"></div>
+  </section>
+  <section class="panel" aria-labelledby="detail-title">
+    <h2 id="detail-title">这一步发生了什么</h2>
+    <p id="detail"></p>
+    {% if hasTokens %}<div class="tokens" id="tokens"></div>{% endif %}
+    <div class="callout" id="note"></div>
+  </section>
+</div>

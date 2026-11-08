@@ -1,0 +1,51 @@
+---
+layout: "layouts/topic.njk"
+title: "3D Secure 在线支付认证"
+heading: "3D Secure 在线支付认证"
+lead: "网上刷卡时，3D Secure（3DS）让商户通过卡组织向发卡银行请求持卡人认证。银行结合交易和设备信息判断风险，必要时让持卡人进一步验证。认证完成后，支付授权仍是另一步。"
+footer: "3DS 是网上支付的持卡人认证流程；实际消息和处理方式以支付服务商及卡组织要求为准。"
+topicScript: "3d-secure"
+hasTokens: false
+permalink: "3d-secure.html"
+---
+<main>
+  <section class="panel">
+    <p class="kicker">THREE DOMAINS</p>
+    <h2>整体架构：三个域如何协作</h2>
+    <div class="diagram mermaid">
+flowchart LR
+    U[持卡人] -->|提交支付| M[商户 / 支付服务商<br/>收单域]
+    M -->|3DS 认证请求| DS[卡组织目录服务器<br/>互操作域]
+    DS -->|转发认证请求| ACS[发卡银行认证系统 ACS<br/>发卡域]
+    ACS -.->|必要时要求验证| U
+    ACS -->|认证结果| DS
+    DS -->|认证结果| M
+    M -->|随后发起支付授权| A[收单方 / 支付网络]
+    A -->|授权请求| I[发卡银行]
+    </div>
+    <p class="callout">3D 指三个域（Three Domains），不是三维图像。图中展示常见角色；支付服务商、3DS 服务和收单方的具体部署可能不同。</p>
+  </section>
+  {% include "parts/steps.njk" %}
+  <section class="panel supplement">
+    <h2>两种认证路径</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>路径</th><th>银行做什么</th><th>持卡人看到什么</th></tr></thead>
+      <tbody>
+        <tr><th>无感认证<br>Frictionless</th><td>根据交易、设备等信息评估并给出认证结果。</td><td>通常无需额外操作；无感不代表没有风险判断。</td></tr>
+        <tr><th>交互认证<br>Challenge</th><td>要求额外验证，并根据验证结果返回状态。</td><td>可能需要在银行 App 确认，或按银行要求输入一次性验证码等。</td></tr>
+      </tbody>
+    </table></div>
+    <p class="callout">具体认证方式由发卡银行及其支持的方案决定。无感与交互只是两条路径，不保证认证或支付一定成功。</p>
+  </section>
+  <section class="panel">
+    <h2>接入和理解时的关键边界</h2>
+    <ul>
+      <li><strong>认证不等于授权：</strong>3DS 认证关注持卡人认证；之后的支付授权由发卡银行另行决定，认证成功仍可能因为余额、限额或风控被拒绝。</li>
+      <li><strong>失败和中断：</strong>用户可能取消或验证失败，认证也可能不可用。商户应按支付服务商、卡组织规则和适用要求处理返回状态，不要把所有结果当作成功。</li>
+      <li><strong>结果需要传递：</strong>认证结果可能包含认证值、交易标识和电子商务指标（ECI）；后续授权按支付服务商及卡组织要求关联并传递相应数据。</li>
+      <li><strong>责任转移有条件：</strong>发生盗刷争议时是否适用责任转移，取决于卡组织规则、交易和认证结果，不能认为所有 3DS 交易都自动享有保障。</li>
+      <li><strong>防范钓鱼：</strong>3DS 可以降低盗刷风险，但无法阻止用户被骗交出验证码或确认不认识的交易。</li>
+    </ul>
+    <p>参考：<a href="https://www.emvco.com/emv-technologies/3-d-secure/">EMVCo：EMV 3-D Secure</a> · <a href="https://www.emvco.com/dynamic/emv-3-d-secure-whitepaper-v2/introduction/">EMVCo：3DS 白皮书</a></p>
+  </section>
+</main>

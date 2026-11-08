@@ -1,0 +1,52 @@
+---
+layout: "layouts/topic.njk"
+title: "AWS STS 如何工作"
+heading: "AWS STS 如何工作"
+lead: "AWS 安全令牌服务（STS）签发有时效的临时凭证，让调用方以 IAM 角色的身份访问 AWS 资源。本页以跨账户 AssumeRole 为例：能否取得角色与取得后能否访问资源，是两次不同的检查。"
+footer: "本页以跨账户 AssumeRole 的程序访问为例；其他 STS 操作及具体授权条件可能不同。相关主题：<a href=\"access-secret-token.html\">Access / Secret</a>。"
+topicScript: "aws-sts"
+hasTokens: false
+permalink: "aws-sts.html"
+---
+<main>
+  <!-- Part 2：整体流程。 -->
+  <section class="panel" aria-labelledby="overview-title">
+    <p class="kicker">OVERVIEW</p>
+    <h2 id="overview-title">整体流程：跨账户访问</h2>
+    <div class="diagram mermaid">
+flowchart LR
+    C[调用方] -->|AssumeRole 请求| S[STS]
+    S -->|检查角色信任及调用权限| I[IAM 策略]
+    S -->|返回临时凭证| C
+    C -->|签名请求与会话令牌| R[AWS 资源服务]
+    R -->|授权后返回结果| C
+    </div>
+    <p class="callout">此图以跨账户角色为例；身份联合和 AWS 服务提供凭证的路径有所不同。</p>
+  </section>
+
+  <!-- Part 3：步骤按钮由 steps 数据生成；左右卡片随选择同步更新。 -->
+  {% include "parts/steps.njk" %}
+  <!-- Part 4：按主题需要保留或增减补充卡片；表格外层提供窄屏滚动。 -->
+  <section class="panel supplement" aria-labelledby="credentials-title">
+    <h2 id="credentials-title">临时凭证包含什么</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th scope="col">字段</th><th scope="col">用途</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><code>AccessKeyId</code></th><td>标识用于签名的临时访问密钥。</td></tr>
+        <tr><th scope="row"><code>SecretAccessKey</code></th><td>用于计算请求签名，需要保密，不直接作为请求参数发送。</td></tr>
+        <tr><th scope="row"><code>SessionToken</code></th><td>随临时凭证签名的请求一起提供；它不是单独使用的刷新令牌。</td></tr>
+        <tr><th scope="row"><code>Expiration</code></th><td>凭证失效时间；到期后需要取得一组新的凭证。</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+  <section class="panel supplement" aria-labelledby="boundary-title">
+    <h2 id="boundary-title">其他入口与权限边界</h2>
+    <ul>
+      <li><strong>身份联合：</strong><code>AssumeRoleWithWebIdentity</code> 使用受信任身份提供方的令牌，<code>AssumeRoleWithSAML</code> 使用 SAML 断言；它们不是本页的跨账户 <code>AssumeRole</code> 请求。</li>
+      <li><strong>会话权限：</strong>角色权限策略提供权限；可选的会话策略用于进一步限制，不能扩大角色基于身份的权限。实际授权还可能受资源策略、权限边界、组织策略和显式拒绝影响。</li>
+      <li><strong>有效期：</strong><code>AssumeRole</code> 默认一小时，可请求 15 分钟至角色配置的最大会话时长（最大可配置为 12 小时）；角色链式切换最多一小时。</li>
+      <li><strong>自动更新：</strong>部分 AWS SDK 凭证提供程序和 AWS 计算服务会在到期前获取新凭证；自行管理凭证时需处理更新。</li>
+    </ul>
+    <p>参考：<a href="https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html">AWS AssumeRole API</a>、<a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html">请求临时凭证</a>、<a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html">策略评估逻辑</a>。</p>
+  </section>
+</main>
