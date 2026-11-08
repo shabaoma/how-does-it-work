@@ -54,20 +54,4 @@ const steps = [
 ];
 
 /* 整体图和步骤图共享主题；关闭自动缩放，让窄屏容器横向滚动。 */
-mermaid.initialize({
-  startOnLoad: true,
-  securityLevel: 'strict',
-  theme: 'base',
-  flowchart: { useMaxWidth: false },
-  sequence: { useMaxWidth: false },
-  themeVariables: {
-    fontFamily: '"Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC", serif',
-    background: '#fffdf8', primaryColor: '#e5f3eb', primaryTextColor: '#1c2430',
-    primaryBorderColor: '#1f6b4a', lineColor: '#1f6b4a', signalColor: '#1c2430',
-    signalTextColor: '#1c2430', noteBkgColor: '#e7f0fa', noteTextColor: '#1d4e89',
-    noteBorderColor: '#9db7d6', actorBkg: '#fffdf8', actorBorder: '#1f6b4a',
-    actorTextColor: '#1c2430'
-  }
-});
-
-window.topicData = { steps };
+module.exports = { steps };

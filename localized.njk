@@ -6,8 +6,8 @@ pagination:
   alias: localizedPage
 permalink: "{{ localizedPage.url }}"
 eleventyComputed:
-  title: "{{ localizedPage.topic.title or localizedPage.locale.home.title }}"
-  heading: "{{ localizedPage.topic.title or localizedPage.locale.home.title }}"
+  title: "{{ localizedPage.topic.pageTitle or localizedPage.topic.title or localizedPage.locale.home.title }}"
+  heading: "{{ localizedPage.topic.heading or localizedPage.topic.title or localizedPage.locale.home.title }}"
   lead: "{{ localizedPage.topic.lead or localizedPage.locale.home.lead }}"
   description: "{{ localizedPage.topic.description or localizedPage.locale.home.description }}"
   footer: "{{ localizedPage.topic.footer or localizedPage.locale.home.footer }}"
@@ -17,13 +17,13 @@ eleventyComputed:
 <main>
   {% if localizedTopic %}
   <section class="panel">
-    <p class="kicker">OVERVIEW</p>
-    <h2>{{ locale.ui.overview }}</h2>
+    <p class="kicker">{{ localizedTopic.overviewKicker or 'OVERVIEW' }}</p>
+    <h2>{{ localizedTopic.overviewTitle or locale.ui.overview }}</h2>
     <div class="diagram mermaid">{{ localizedTopic.overview }}</div>
-    <p class="callout">{{ localizedTopic.overviewNote }}</p>
+    <p class="callout">{{ localizedTopic.overviewNote | safe }}</p>
   </section>
   {% include "parts/steps.njk" %}
-  <section class="panel supplement"><h2>{{ locale.ui.boundaries }}</h2><p>{{ localizedTopic.extra }}</p></section>
+  {% if localizedTopic.supplement %}{{ localizedTopic.supplement | safe }}{% else %}<section class="panel supplement"><h2>{{ locale.ui.boundaries }}</h2><p>{{ localizedTopic.extra }}</p></section>{% endif %}
   {% else %}
   {% for category, entries in locale.topics | groupby('category') %}
   <section class="topic-group" aria-labelledby="category-{{ loop.index }}">

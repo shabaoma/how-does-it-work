@@ -1,0 +1,79 @@
+{
+  "sessionCookie": {
+    "title": "Session Cookie 登录",
+    "heading": "Session Cookie 登录",
+    "lead": "浏览器登录的常见做法。服务器保存「这次登录是谁」，响应里用 <code>Set-Cookie</code> 交给浏览器一个不透明的 session id。之后同站请求由浏览器自动带上 <code>Cookie</code>，服务器用这个 id 查回用户。页面脚本不必自己把令牌抄进 <code>Authorization</code>。",
+    "footer": "这是浏览器 Session Cookie 的一般过程。令牌登录见 <a href=\"access-secret-token.html\">Access token 与 Secret token</a>。",
+    "overviewKicker": "SESSION FLOW",
+    "overviewTitle": "整体流程：浏览器如何保持登录",
+    "overview": "flowchart LR\n    B[浏览器] -->|提交登录凭证| S[服务器]\n    S -->|保存登录会话| D[(Session 存储)]\n    S -->|Set-Cookie 返回会话编号| B\n    B -->|后续请求携带 Cookie| S\n    S -->|按编号查询会话| D\n    S -->|返回业务结果| B",
+    "overviewNote": "Cookie 携带会话编号；服务器通过会话存储确认登录状态。",
+    "supplement": "<section class=\"panel supplement\">\n    <h2>session 和 cookie 各管一件事</h2>\n    <div class=\"table-scroll\"><table>\n      <thead>\n        <tr><th></th><th>服务器上的 session</th><th>浏览器里的 cookie</th></tr>\n      </thead>\n      <tbody>\n        <tr>\n          <th>存什么</th>\n          <td>用户 id、登录时间、过期时间。真正的登录状态在这里。</td>\n          <td>只存一个随机的 <code>sid</code>。用户资料不放进 cookie。</td>\n        </tr>\n        <tr>\n          <th>怎么出现</th>\n          <td>账号密码校验通过后写入存储，键就是这个 <code>sid</code>。</td>\n          <td>响应头 <code>Set-Cookie: sid=...; HttpOnly; Secure; Path=/; SameSite=Lax</code>。</td>\n        </tr>\n        <tr>\n          <th>下次请求</th>\n          <td>用请求头里的 <code>sid</code> 查表。查不到或已过期，就当作未登录。</td>\n          <td>域名、路径、过期时间都匹配时，浏览器自动加上 <code>Cookie: sid=...</code>。</td>\n        </tr>\n        <tr>\n          <th>登出</th>\n          <td>删掉这条记录。即使浏览器还带着旧 <code>sid</code>，查表也失败。</td>\n          <td>再回一条 <code>Set-Cookie: sid=; Max-Age=0</code>，让浏览器丢掉它。</td>\n        </tr>\n      </tbody>\n    </table></div>\n    <p class=\"callout\"><code>HttpOnly</code> 让页面脚本读不到这份 cookie。<code>Secure</code> 只在 HTTPS 下发送。<code>SameSite=Lax</code> 限制部分跨站请求携带 cookie，以减轻跨站请求伪造；部分安全的顶层导航仍可能携带。真正让登录失效的是服务器删掉 session，cookie 只是那把查表用的编号。</p>\n  </section>"
+  },
+  "accessSecretToken": {
+    "title": "Access token 与 Secret token",
+    "heading": "Access token 和 Secret token",
+    "lead": "一种常见的登录发证方式。认证服务器在确认身份之后，发给客户端两张用途不同的令牌：<code>access token</code> 拿去调用业务接口，<code>secret token</code> 只拿去向认证服务器换新的 access token。OAuth 里，登录后发出的这张长期机密令牌通常叫 refresh token。",
+    "footer": "这是令牌登录的一般过程。浏览器把登录状态放在 cookie 里的做法见 <a href=\"session-cookie.html\">Session Cookie</a>。",
+    "overviewKicker": "TOKEN FLOW",
+    "overviewTitle": "整体流程：两种令牌如何使用",
+    "overview": "flowchart LR\n    C[客户端] -->|登录凭证| A[认证服务器]\n    A -->|签发访问令牌和刷新令牌| C\n    C -->|访问令牌| B[业务服务器]\n    B -->|业务结果| C\n    C -.->|访问令牌过期时提交刷新令牌| A",
+    "overviewNote": "图中 secret token 指刷新令牌；是否签发或轮换刷新令牌取决于系统设计。",
+    "supplement": "<section class=\"panel supplement\">\n    <h2>两张令牌各做什么</h2>\n    <div class=\"table-scroll\"><table>\n      <thead>\n        <tr><th></th><th>access token</th><th>secret token</th></tr>\n      </thead>\n      <tbody>\n        <tr>\n          <th>发给谁</th>\n          <td>业务服务器。通常放在 <code>Authorization: Bearer</code>。</td>\n          <td>认证服务器的换发接口。业务请求里不出现它。</td>\n        </tr>\n        <tr>\n          <th>有效期</th>\n          <td>短。过期后业务服务器直接拒绝。</td>\n          <td>长。用来在 access token 过期后续上一张新的。</td>\n        </tr>\n        <tr>\n          <th>服务器怎么认</th>\n          <td>核对签名、过期时间和权限范围，通过就执行这次调用。</td>\n          <td>在认证服务器上查这张是否仍有效。有效才签发新的 access token。</td>\n        </tr>\n        <tr>\n          <th>登出</th>\n          <td>已发出的那张会留到自己的过期时间。</td>\n          <td>注销这张之后，就不能再换发。这是让登录停下来的那一步。</td>\n        </tr>\n      </tbody>\n    </table></div>\n    <p class=\"callout\">应用向认证服务器证明「我是哪个应用」时，用的是另一份应用密钥，一般叫 client secret。它在用户登录之前就配置在服务端或机密客户端里，和登录后发给这个用户的 secret token 是两份东西。</p>\n  </section>"
+  },
+  "sso": {
+    "title": "外部 SSO 登录与退出",
+    "heading": "外部 SSO 登录与退出",
+    "lead": "单点登录（SSO）让应用把身份认证交给外部身份提供方。用户通过浏览器跳转完成认证，应用再建立自己的会话；退出应用和退出身份提供方是不同的操作。下面以 OpenID Connect（OIDC）授权码流程和服务端应用为例。",
+    "footer": "本页以 OIDC 服务端应用为例；具体参数和退出能力取决于身份提供方。继续了解 <a href=\"session-cookie.html\">Session Cookie</a>。",
+    "overviewKicker": "OVERVIEW",
+    "overviewTitle": "整体流程：应用与外部身份提供方协作",
+    "overview": "flowchart LR\n    U[用户] -->|操作| B[浏览器]\n    B -->|访问和回调| A[应用]\n    B -->|认证和可选退出| I[身份提供方]\n    A -->|交换授权码| I\n    I -.->|可选：退出通知| A",
+    "overviewNote": "浏览器负责跳转，应用与身份提供方分别维护会话。虚线表示双方配置并支持时，身份提供方可通知应用退出。",
+    "supplement": "<section class=\"panel supplement\" aria-labelledby=\"sessions-title\">\n    <h2 id=\"sessions-title\">两种会话与退出范围</h2>\n    <div class=\"table-scroll\"><table>\n      <thead><tr><th scope=\"col\">会话</th><th scope=\"col\">作用</th><th scope=\"col\">退出后的影响</th></tr></thead>\n      <tbody>\n        <tr><th scope=\"row\">应用会话</th><td>应用识别后续请求中的用户。</td><td>清除本地会话后，该应用不再认可它；身份提供方会话可能仍有效。</td></tr>\n        <tr><th scope=\"row\">身份提供方会话</th><td>身份提供方记住已认证用户，让其他应用可以复用认证状态。</td><td>结束后通常需要重新认证；其他应用已有的本地会话不一定同时失效。</td></tr>\n      </tbody>\n    </table></div>\n    <p class=\"callout\">只退出应用后再次点击登录，若身份提供方会话仍有效，用户可能无需再次输入凭据。</p>\n  </section>\n  <section class=\"panel supplement\" aria-labelledby=\"boundary-title\">\n    <h2 id=\"boundary-title\">接入与退出的关键边界</h2>\n    <ul>\n      <li><strong>事先建立信任：</strong>在身份提供方注册客户端和精确的回调地址，使用可信配置获取端点和签名密钥；全程使用 HTTPS。</li>\n      <li><strong>保护登录回调：</strong>校验 <code>state</code> 以关联请求和回调；使用 PKCE 绑定授权码，并在发送 <code>nonce</code> 时校验它。校验 ID Token 的签名、签发方、受众和有效期等，失败则不建立会话。</li>\n      <li><strong>账号映射：</strong>使用可信签发方 <code>iss</code> 与主体 <code>sub</code> 标识外部身份；是否自动创建或关联本地账号由应用策略决定，不应仅凭未经验证的邮箱绑定账号。</li>\n      <li><strong>退出传播：</strong>应用发起的身份提供方退出与向其他应用传播退出是独立能力。前端或后端通知需要对应应用和提供方支持与配置，通知也可能失败，不能保证所有会话立即结束。</li>\n      <li><strong>令牌生命周期：</strong>清除会话或退出身份提供方不一定撤销已签发的访问令牌；需要时按提供方能力撤销令牌，并控制其有效期。</li>\n    </ul>\n    <p>参考：<a href=\"https://openid.net/specs/openid-connect-core-1_0.html\">OIDC Core</a> · <a href=\"https://openid.net/specs/openid-connect-rpinitiated-1_0-final.html\">应用发起的退出</a> · <a href=\"https://openid.net/specs/openid-connect-backchannel-1_0-final.html\">后端退出通知</a></p>\n  </section>"
+  },
+  "emailCode": {
+    "title": "邮箱验证码登录",
+    "heading": "邮箱验证码登录",
+    "lead": "这是一种无密码登录：用户输入邮箱，服务端发送一次性验证码；用户把验证码填回来，服务端验证通过后建立登录状态。邮箱地址用来找到账号，能收到并填写验证码用来证明当前能够访问该邮箱。",
+    "footer": "继续了解登录后的状态：<a href=\"session-cookie.html\">Session Cookie</a> 或 <a href=\"access-secret-token.html\">Access / Secret token</a>。",
+    "overviewKicker": "ARCHITECTURE",
+    "overviewTitle": "整体架构：验证码经过哪里",
+    "overview": "flowchart LR\n    U[用户] -->|1. 输入邮箱 / 4. 输入验证码| B[浏览器或 App]\n    B -->|HTTPS 请求| A[认证服务]\n    A -->|保存和校验验证码| R[(验证码存储<br/>如 Redis)]\n    A -->|2. 请求发送邮件| M[邮件服务商<br/>SMTP / 邮件 API]\n    M -->|3. 投递验证码| E[用户邮箱]\n    E -->|用户查看| U\n    A -->|查找账号| D[(用户数据库)]\n    A -->|5. 创建会话| S[(Session 存储)]\n    A -->|返回 Session Cookie| B\n    B -->|后续请求携带 Cookie| API[业务服务]\n    API -->|查询会话| S",
+    "overviewNote": "验证码只用于这次身份验证；验证成功后，浏览器使用的是新的登录会话。图中用 Session Cookie 举例，也可以按系统设计签发令牌。",
+    "supplement": "<section class=\"panel supplement\">\n    <h2>实现时要守住的边界</h2>\n    <ul>\n      <li><strong>生成和保存：</strong>用密码学安全随机数生成验证码；服务端保存邮箱、用途、到期时间、尝试次数和验证码的校验值。短数字码很容易被离线枚举，可使用服务端密钥计算 HMAC，并将密钥与存储分离；不要记录明文验证码。</li>\n      <li><strong>短期、一次有效：</strong>例如 6 位数字、5～10 分钟有效；成功时原子地校验并消费，过期或使用后不能再用。重新发送时明确使旧码失效或限制同时有效的码。</li>\n      <li><strong>限制滥用：</strong>按邮箱、IP 等维度限制发送和验证次数，设置重发冷却；对不存在和存在的账号尽量给出一致的提示，减少账号枚举。</li>\n      <li><strong>建立会话：</strong>全程使用 HTTPS；成功后创建新的随机 Session ID，Cookie 设置 <code>Secure</code>、<code>HttpOnly</code> 和合适的 <code>SameSite</code>，并根据应用需要防范 CSRF。</li>\n      <li><strong>账号策略：</strong>验证成功后查找已有账号；是否允许新邮箱自动注册由产品策略决定。验证码不应让用户转发给别人。</li>\n    </ul>\n    <p class=\"callout warn\">安全性依赖邮箱和邮件链路；这不等于多因素认证，也不能防钓鱼。高风险操作可增加 Passkey 等抗钓鱼认证。NIST 的数字身份指南不允许将邮箱作为带外认证通道。</p>\n    <p>参考：<a href=\"https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html\">OWASP 认证指南</a> · <a href=\"https://pages.nist.gov/800-63-4/sp800-63b.html\">NIST SP 800-63B</a></p>\n  </section>"
+  },
+  "threeDSecure": {
+    "title": "3D Secure 在线支付认证",
+    "heading": "3D Secure 在线支付认证",
+    "lead": "网上刷卡时，3D Secure（3DS）让商户通过卡组织向发卡银行请求持卡人认证。银行结合交易和设备信息判断风险，必要时让持卡人进一步验证。认证完成后，支付授权仍是另一步。",
+    "footer": "3DS 是网上支付的持卡人认证流程；实际消息和处理方式以支付服务商及卡组织要求为准。",
+    "overviewKicker": "THREE DOMAINS",
+    "overviewTitle": "整体架构：三个域如何协作",
+    "overview": "flowchart LR\n    U[持卡人] -->|提交支付| M[商户 / 支付服务商<br/>收单域]\n    M -->|3DS 认证请求| DS[卡组织目录服务器<br/>互操作域]\n    DS -->|转发认证请求| ACS[发卡银行认证系统 ACS<br/>发卡域]\n    ACS -.->|必要时要求验证| U\n    ACS -->|认证结果| DS\n    DS -->|认证结果| M\n    M -->|随后发起支付授权| A[收单方 / 支付网络]\n    A -->|授权请求| I[发卡银行]",
+    "overviewNote": "3D 指三个域（Three Domains），不是三维图像。图中展示常见角色；支付服务商、3DS 服务和收单方的具体部署可能不同。",
+    "supplement": "<section class=\"panel supplement\">\n    <h2>两种认证路径</h2>\n    <div class=\"table-scroll\"><table>\n      <thead><tr><th>路径</th><th>银行做什么</th><th>持卡人看到什么</th></tr></thead>\n      <tbody>\n        <tr><th>无感认证<br>Frictionless</th><td>根据交易、设备等信息评估并给出认证结果。</td><td>通常无需额外操作；无感不代表没有风险判断。</td></tr>\n        <tr><th>交互认证<br>Challenge</th><td>要求额外验证，并根据验证结果返回状态。</td><td>可能需要在银行 App 确认，或按银行要求输入一次性验证码等。</td></tr>\n      </tbody>\n    </table></div>\n    <p class=\"callout\">具体认证方式由发卡银行及其支持的方案决定。无感与交互只是两条路径，不保证认证或支付一定成功。</p>\n  </section>\n  <section class=\"panel\">\n    <h2>接入和理解时的关键边界</h2>\n    <ul>\n      <li><strong>认证不等于授权：</strong>3DS 认证关注持卡人认证；之后的支付授权由发卡银行另行决定，认证成功仍可能因为余额、限额或风控被拒绝。</li>\n      <li><strong>失败和中断：</strong>用户可能取消或验证失败，认证也可能不可用。商户应按支付服务商、卡组织规则和适用要求处理返回状态，不要把所有结果当作成功。</li>\n      <li><strong>结果需要传递：</strong>认证结果可能包含认证值、交易标识和电子商务指标（ECI）；后续授权按支付服务商及卡组织要求关联并传递相应数据。</li>\n      <li><strong>责任转移有条件：</strong>发生盗刷争议时是否适用责任转移，取决于卡组织规则、交易和认证结果，不能认为所有 3DS 交易都自动享有保障。</li>\n      <li><strong>防范钓鱼：</strong>3DS 可以降低盗刷风险，但无法阻止用户被骗交出验证码或确认不认识的交易。</li>\n    </ul>\n    <p>参考：<a href=\"https://www.emvco.com/emv-technologies/3-d-secure/\">EMVCo：EMV 3-D Secure</a> · <a href=\"https://www.emvco.com/dynamic/emv-3-d-secure-whitepaper-v2/introduction/\">EMVCo：3DS 白皮书</a></p>\n  </section>"
+  },
+  "awsSts": {
+    "title": "AWS STS 如何工作",
+    "heading": "AWS STS 如何工作",
+    "lead": "AWS 安全令牌服务（STS）签发有时效的临时凭证，让调用方以 IAM 角色的身份访问 AWS 资源。本页以跨账户 AssumeRole 为例：能否取得角色与取得后能否访问资源，是两次不同的检查。",
+    "footer": "本页以跨账户 AssumeRole 的程序访问为例；其他 STS 操作及具体授权条件可能不同。相关主题：<a href=\"aws-iam.html\">AWS IAM</a>、<a href=\"access-secret-token.html\">Access / Secret</a>。",
+    "overviewKicker": "OVERVIEW",
+    "overviewTitle": "整体流程：跨账户访问",
+    "overview": "flowchart LR\n    C[调用方] -->|AssumeRole 请求| S[STS]\n    S -->|检查角色信任及调用权限| I[IAM 策略]\n    S -->|返回临时凭证| C\n    C -->|签名请求与会话令牌| R[AWS 资源服务]\n    R -->|授权后返回结果| C",
+    "overviewNote": "此图以跨账户角色为例；身份联合和 AWS 服务提供凭证的路径有所不同。",
+    "supplement": "<section class=\"panel supplement\" aria-labelledby=\"credentials-title\">\n    <h2 id=\"credentials-title\">临时凭证包含什么</h2>\n    <div class=\"table-scroll\"><table>\n      <thead><tr><th scope=\"col\">字段</th><th scope=\"col\">用途</th></tr></thead>\n      <tbody>\n        <tr><th scope=\"row\"><code>AccessKeyId</code></th><td>标识用于签名的临时访问密钥。</td></tr>\n        <tr><th scope=\"row\"><code>SecretAccessKey</code></th><td>用于计算请求签名，需要保密，不直接作为请求参数发送。</td></tr>\n        <tr><th scope=\"row\"><code>SessionToken</code></th><td>随临时凭证签名的请求一起提供；它不是单独使用的刷新令牌。</td></tr>\n        <tr><th scope=\"row\"><code>Expiration</code></th><td>凭证失效时间；到期后需要取得一组新的凭证。</td></tr>\n      </tbody>\n    </table></div>\n  </section>\n  <section class=\"panel supplement\" aria-labelledby=\"boundary-title\">\n    <h2 id=\"boundary-title\">其他入口与权限边界</h2>\n    <ul>\n      <li><strong>身份联合：</strong><code>AssumeRoleWithWebIdentity</code> 使用受信任身份提供方的令牌，<code>AssumeRoleWithSAML</code> 使用 SAML 断言；它们不是本页的跨账户 <code>AssumeRole</code> 请求。</li>\n      <li><strong>会话权限：</strong>角色权限策略提供权限；可选的会话策略用于进一步限制，不能扩大角色基于身份的权限。实际授权还可能受资源策略、权限边界、组织策略和显式拒绝影响。</li>\n      <li><strong>有效期：</strong><code>AssumeRole</code> 默认一小时，可请求 15 分钟至角色配置的最大会话时长（最大可配置为 12 小时）；角色链式切换最多一小时。</li>\n      <li><strong>自动更新：</strong>部分 AWS SDK 凭证提供程序和 AWS 计算服务会在到期前获取新凭证；自行管理凭证时需处理更新。</li>\n    </ul>\n    <p>参考：<a href=\"https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html\">AWS AssumeRole API</a>、<a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html\">请求临时凭证</a>、<a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html\">策略评估逻辑</a>。</p>\n  </section>"
+  },
+  "awsIam": {
+    "title": "AWS IAM 如何运作",
+    "heading": "AWS IAM 如何运作",
+    "lead": "AWS 身份与访问管理（IAM）帮助控制谁能对哪些 AWS 资源执行什么操作。本页以同一账户内的角色会话读取 Amazon S3 对象为例，说明请求认证和权限评估；角色的获取过程另见 AWS STS。",
+    "footer": "本页展示同账户程序访问的简化过程；具体授权取决于请求、资源和所有适用策略。相关主题：<a href=\"aws-sts.html\">AWS STS</a>。",
+    "overviewKicker": "OVERVIEW",
+    "overviewTitle": "整体流程：从请求到授权",
+    "overview": "flowchart LR\n    C[调用方] -->|签名读取请求| S[S3 服务]\n    S -->|认证及评估请求| P[IAM 授权]\n    P -->|允许或拒绝| S\n    S -->|允许时读取对象| R[(S3 对象)]\n    S -->|结果或错误| C",
+    "overviewNote": "示例假设调用方已取得角色临时凭证；图中的 IAM 授权表示 AWS 的评估过程，不表示每次请求都会调用公开的 IAM API。",
+    "supplement": "<section class=\"panel supplement\" aria-labelledby=\"policy-title\">\n    <h2 id=\"policy-title\">常见策略各管什么</h2>\n    <div class=\"table-scroll\"><table>\n      <thead><tr><th scope=\"col\">策略或限制</th><th scope=\"col\">作用</th></tr></thead>\n      <tbody>\n        <tr><th scope=\"row\">基于身份的策略</th><td>附加到用户、组或角色，授予或拒绝操作。</td></tr>\n        <tr><th scope=\"row\">基于资源的策略</th><td>附加到支持该策略的资源，指定主体及其允许或拒绝的操作，例如 S3 存储桶策略。</td></tr>\n        <tr><th scope=\"row\">权限边界与会话策略</th><td>限制身份或角色会话可获得的基于身份的权限，本身不授予权限；资源策略直接授权给某些主体时有特殊规则。</td></tr>\n        <tr><th scope=\"row\">组织控制策略</th><td>服务控制策略（SCP）和资源控制策略（RCP）分别限制适用主体或资源的最大权限，本身不授予权限，适用范围和例外不同。</td></tr>\n      </tbody>\n    </table></div>\n  </section>\n  <section class=\"panel supplement\" aria-labelledby=\"boundary-title\">\n    <h2 id=\"boundary-title\">理解授权的边界</h2>\n    <ul>\n      <li><strong>同账户：</strong>身份策略或资源策略可以提供允许，但其他适用限制仍可能阻止请求。资源策略直接授权给 IAM 用户或角色会话时，权限边界和会话策略中的隐式拒绝有特殊规则；显式拒绝仍生效。</li>\n      <li><strong>跨账户：</strong>通常需要调用方账户和资源账户两侧都允许；具体评估取决于访问方式及服务。代入另一账户的角色后，使用的是该角色会话。</li>\n      <li><strong>角色信任：</strong>信任策略控制谁可以代入角色；取得角色会话后，访问资源仍须单独授权。</li>\n      <li><strong>服务特定控制：</strong>S3 还可能受阻止公开访问等设置影响；IAM 评估通过也不代表操作一定成功，例如对象不存在或加密密钥权限不足。</li>\n    </ul>\n    <p>参考：<a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html\">AWS 策略评估逻辑</a>、<a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic_policy-eval-denyallow.html\">允许与拒绝的评估</a>、<a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html\">策略与权限</a>。</p>\n  </section>"
+  }
+}

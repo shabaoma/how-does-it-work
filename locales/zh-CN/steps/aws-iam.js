@@ -54,4 +54,4 @@ const steps = [
       end`
   }
 ];
-window.topicData = { steps };
+module.exports = { steps };

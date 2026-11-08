@@ -87,4 +87,4 @@ const tokenDetails = {
     access: "业务服务器看到的是这张短期令牌。过期、签名不对或权限不够，这次调用就停在业务服务器。",
     secret: "这张只在换发和注销时交给认证服务器。它能持续换出新的 access token，所以要放在别人读不到的地方，并且允许服务器把它作废。"
   };
-window.topicData = { steps, tokenMeta, tokenDetails, warningToken: "secret", warningStep: 3, keyboardNavigation: true };
+module.exports = { steps, tokenMeta, tokenDetails, warningToken: "secret", warningStep: 3, keyboardNavigation: true };

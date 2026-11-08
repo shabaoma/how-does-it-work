@@ -92,4 +92,4 @@ const steps = [
       B->>A: 可选：访问退出后地址`
   }
 ];
-window.topicData = { steps };
+module.exports = { steps };
