@@ -91,3 +91,53 @@ li { margin: 8px 0; }
 .language-switch { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 14px; }
 .language-switch a { color: var(--blue); }
 .language-switch [aria-current] { color: var(--muted); }
+
+/* Shared reading and interaction refinements */
+.site-layout { max-width: 1354px; }
+.page-content { width: 100%; max-width: 1100px; }
+.page-content > header { padding-bottom: 24px; }
+.lead { max-width: 72ch; }
+footer { padding-top: 16px; border-top: 1px solid var(--line); font-size: 14px; }
+a { color: var(--blue); text-underline-offset: 3px; }
+.panel h2, .panel h3 { line-height: 1.35; }
+.panel > p:last-child { margin-bottom: 0; }
+.diagram, .table-scroll { overscroll-behavior-x: contain; }
+.diagram { padding-block: 8px; }
+.diagram[aria-busy="true"] { min-height: 90px; color: var(--muted); }
+.step-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 28px; }
+.step-heading h2 { margin: 0; font-size: 18px; }
+.step-heading p { margin: 0; color: var(--muted); font-size: 14px; white-space: nowrap; }
+.steps { margin: 12px 0; }
+button.step, button.nav { min-height: 42px; transition: border-color .15s, background-color .15s, color .15s; }
+button.step:hover:not([aria-current="step"]), button.nav:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.navs { margin-bottom: 16px; }
+button.nav:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+button.nav:disabled { opacity: 1; color: var(--muted); background: var(--bg); border-color: var(--line); }
+.layout > .panel { height: 100%; }
+.token:disabled { cursor: default; }
+.token:not(:disabled):hover { border-color: var(--accent); }
+.topic-group:first-child { margin-top: 0; }
+.topic-group > h2 { display: flex; align-items: center; gap: 10px; }
+.topic-group > h2::before { content: ""; width: 4px; height: 1em; border-radius: 4px; background: var(--accent); }
+.topic-card { display: flex; flex-direction: column; min-height: 160px; transition: border-color .15s, box-shadow .15s, transform .15s; }
+.topic-card p { flex: 1; }
+.topic-card span { font-weight: 600; }
+.topic-card:hover { box-shadow: 0 6px 18px rgba(28, 36, 48, .08); transform: translateY(-2px); }
+@media (max-width: 860px) {
+  .page-content > header { padding-bottom: 20px; }
+  .layout > .panel { height: auto; }
+}
+@media (max-width: 480px) {
+  .step-heading { align-items: flex-start; }
+  .navs button { flex: 1; }
+  .topic-card { min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; scroll-behavior: auto !important; }
+}
+
+/* Fit overview diagrams to the card on larger screens; keep labels legible on small screens. */
+.mermaid svg { display: block; width: auto; max-width: 100%; }
+@media (max-width: 860px) {
+  .mermaid svg { max-width: none; }
+}

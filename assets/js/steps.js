@@ -7,6 +7,8 @@
   const sequence = document.getElementById('sequence');
   const tokens = document.getElementById('tokens');
   const note = document.getElementById('note');
+  const progress = document.getElementById('step-progress');
+  const english = document.documentElement.lang === 'en';
   let current = 0;
   let focus = null;
   let renderVersion = 0;
@@ -33,6 +35,7 @@
     if (tokens) tokens.querySelectorAll('.token').forEach(element => {
       const key = element.dataset.key;
       element.dataset.state = focus === key && live.has(key) ? 'focus' : !live.has(key) ? 'idle' : tokenMeta[key].state;
+      element.disabled = !live.has(key);
       element.setAttribute('aria-pressed', String(focus === key && live.has(key)));
     });
     const focused = focus && live.has(focus) && tokenDetails && tokenDetails[focus];
@@ -45,6 +48,7 @@
     current = index;
     focus = null;
     const step = steps[index];
+    progress.textContent = english ? `Step ${index + 1} of ${steps.length}` : `第 ${index + 1} 步 / 共 ${steps.length} 步`;
     document.getElementById('kicker').textContent = step.kicker;
     document.getElementById('step-title').textContent = step.title;
     document.getElementById('detail').textContent = step.detail;
@@ -56,12 +60,16 @@
     next.disabled = index === steps.length - 1;
     paintTokens();
     const version = ++renderVersion;
+    sequence.setAttribute('aria-busy', 'true');
+    sequence.textContent = english ? 'Loading diagram…' : '正在加载图表…';
     try {
       if (!window.mermaid) throw new Error('Mermaid unavailable');
       const result = await mermaid.render('sequence-' + version, step.diagram);
       if (version === renderVersion) sequence.innerHTML = result.svg;
     } catch (error) {
       if (version === renderVersion) sequence.textContent = diagramError;
+    } finally {
+      if (version === renderVersion) sequence.setAttribute('aria-busy', 'false');
     }
   }
 
@@ -84,6 +92,7 @@
   previous.addEventListener('click', () => showStep(current - 1));
   next.addEventListener('click', () => showStep(current + 1));
   if (keyboardNavigation) document.addEventListener('keydown', event => {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName) || event.target.isContentEditable) return;
     if (event.key === 'ArrowRight') showStep(current + 1);
     if (event.key === 'ArrowLeft') showStep(current - 1);
   });

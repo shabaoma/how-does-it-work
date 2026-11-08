@@ -1,3 +1,4 @@
+<div class="step-heading"><h2>{% if english %}Step by step{% else %}分步讲解{% endif %}</h2><p id="step-progress" aria-live="polite" aria-atomic="true"></p></div>
 <div class="steps" id="steps" role="group" aria-label="{% if english %}Flow steps{% else %}流程步骤{% endif %}"></div>
 <div class="navs">
   <button class="nav" id="prev" type="button">{% if english %}Previous{% else %}上一步{% endif %}</button>
@@ -7,7 +8,7 @@
   <section class="panel" aria-labelledby="step-title">
     <p class="kicker" id="kicker"></p>
     <h2 id="step-title"></h2>
-    <div class="diagram" id="sequence"></div>
+    <div class="diagram" id="sequence" aria-busy="true"></div>
   </section>
   <section class="panel" aria-labelledby="detail-title">
     <h2 id="detail-title">{% if english %}What happens in this step{% else %}这一步发生了什么{% endif %}</h2>
