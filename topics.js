@@ -9,6 +9,7 @@ const topics = [
   { key: 'webhook', url: 'webhook.html', updated: '2026-11-08', category: 'integration' },
   { key: 'dropboxSync', url: 'dropbox-sync.html', updated: '2026-11-08', category: 'distributed' },
   { key: 'notionSync', url: 'notion-sync.html', updated: '2026-11-08', category: 'distributed' },
+  { key: 'socialNetwork', url: 'social-network.html', updated: '2026-11-08', category: 'distributed' },
   { key: 'cacheInvalidation', url: 'cache-invalidation.html', updated: '2026-11-08', category: 'distributed' },
   { key: 'threeDSecure', url: '3d-secure.html', updated: '2026-11-08', category: 'payments' },
   { key: 'paymentIdempotency', url: 'payment-idempotency.html', updated: '2026-11-08', category: 'payments' },

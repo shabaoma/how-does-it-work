@@ -3,6 +3,7 @@ const zhMetadata = require('./topics.js');
 const zhSteps = {
   dropboxSync: require('./steps/dropbox-sync'),
   notionSync: require('./steps/notion-sync'),
+  socialNetwork: require('./steps/social-network'),
   codexMcp: require('./steps/codex-mcp'),
   sessionCookie: require('./steps/session-cookie'),
   accessSecretToken: require('./steps/access-secret-token'),

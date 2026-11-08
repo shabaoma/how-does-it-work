@@ -1,4 +1,14 @@
 {
+  "socialNetwork": {
+    "title": "社交网络如何运作与设计",
+    "heading": "社交网络如何运作与设计",
+    "lead": "社交网络服务（SNS）让用户建立关系、发布内容并互动。本页以关注制、按时间排序的信息流为例：读者只能看到当前有权访问的内容，发布并不意味着所有关注者都会立刻看到。",
+    "overviewTitle": "整体流程：从关注到互动",
+    "overview": "flowchart LR\n R[读者] -->|关注作者| S[社交应用]\n A[作者] -->|发布动态| S\n S -->|保存关系和内容| D[(数据库)]\n R -->|请求信息流| S\n S -->|返回可见动态| R\n R -->|点赞或评论| S\n S -.->|按策略发送通知| A",
+    "overviewNote": "本例在读取时根据关注关系生成信息流。虚线表示通知是可选路径，是否发送取决于产品策略和用户设置。",
+    "footer": "本页展示关注制社交产品的一种简化设计；熟人社交、社区和推荐系统可能采用不同规则。相关主题：<a href=\"cache-invalidation.html\">缓存更新与失效</a>、<a href=\"webhook.html\">Webhook 事件通知</a>。",
+    "supplement": "<section class=\"panel supplement\"><h2>信息流如何生成</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">方式</th><th scope=\"col\">做法</th><th scope=\"col\">权衡</th></tr></thead><tbody><tr><th scope=\"row\">读时生成</th><td>打开首页时查询关注者的内容并排序。</td><td>初期实现直接；关注多或读取量大时查询成本上升。</td></tr><tr><th scope=\"row\">写时分发</th><td>发布后将动态引用写入粉丝的收件箱。</td><td>读取较快；粉丝很多时写入量和延迟可能很高。</td></tr><tr><th scope=\"row\">混合方式</th><td>对不同作者采用不同策略，读取时合并候选内容。</td><td>可缓解大账号的分发压力，但增加合并和运维复杂度。</td></tr></tbody></table></div><p class=\"callout\">可先按时间读时生成，测量实际瓶颈后再选择优化；预分发也要在读取时重新检查权限。</p></section><section class=\"panel supplement\"><h2>从最小版本开始设计</h2><ul><li><strong>模块与数据：</strong>先实现用户、关注、动态、媒体、点赞、评论和通知；关注和点赞的用户组合设置唯一约束。正文与可见范围保存在数据库，媒体可放在对象存储。</li><li><strong>访问控制：</strong>读取动态、评论和媒体时检查当前可见范围、屏蔽和删除状态；不能只依赖信息流是否显示。</li><li><strong>异步与计数：</strong>媒体处理和通知可通过队列执行。重试需要幂等；点赞明细是事实来源，缓存计数需要处理并发与修复。</li><li><strong>分页与删除：</strong>用时间和唯一 ID 组成游标分页，明确排序和并发变化的语义；删除或权限变更还需处理缓存、索引和媒体访问。</li><li><strong>运营与部署：</strong>准备举报、审核和限流。起步可用单个应用、关系型数据库、对象存储和队列，按实际负载拆分。</li></ul></section>"
+  },
   "codexMcp": {
     "title": "Codex 如何运行 MCP",
     "heading": "Codex 如何运行 MCP",

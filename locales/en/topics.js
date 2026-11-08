@@ -1,4 +1,5 @@
 module.exports = {
+  socialNetwork: { label: 'Social networks', title: 'How to design a social network', description: 'Explore follows, posts, feeds, and interactions.' },
   dropboxSync: { label: 'Dropbox device sync', title: 'How Dropbox syncs across devices', description: 'Follow file changes, block transfers, and conflicts.' },
   notionSync: { label: 'Notion device sync', title: 'How Notion syncs across devices', description: 'Follow offline storage, update notifications, and conflict handling.' },
   codexMcp: { label: 'Codex and MCP', title: 'How Codex runs MCP', description: 'Follow configuration, startup and tool calls.' },

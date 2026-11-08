@@ -1,4 +1,5 @@
 module.exports = {
+  socialNetwork: { label: '社交网络', title: '社交网络如何运作与设计', description: '了解关注、发布、信息流和互动的设计。' },
   dropboxSync: { label: 'Dropbox 跨设备同步', title: 'Dropbox 如何跨设备同步', description: '了解文件变更、数据块传输与冲突处理。' },
   notionSync: { label: 'Notion 跨设备同步', title: 'Notion 如何跨设备同步', description: '了解离线页面的本地存储、更新通知和冲突处理。' },
   codexMcp: { label: 'Codex 与 MCP', title: 'Codex 如何运行 MCP', description: '了解配置、启动和工具调用。' },
