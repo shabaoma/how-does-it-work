@@ -46,6 +46,7 @@
         </div>
         <h1>{{ heading }}</h1>
         <p class="lead">{{ lead | safe }}</p>
+        <p class="updated">{{ locale.ui.updated }}: <time datetime="{{ localizedPage.updated }}">{{ localizedPage.updated }}</time></p>
       </header>
       {{ content | safe }}
       <footer>{{ footer | safe }}</footer>
