@@ -1,4 +1,14 @@
 {
+  "codexMcp": {
+    "title": "Codex 如何运行 MCP",
+    "heading": "Codex 如何运行 MCP",
+    "lead": "以本地启动的 MCP Server 为例，说明 Codex 如何通过模型上下文协议（MCP）连接和调用工具。程序可以在项目目录之外；配置存在不代表工具已经成功启动。",
+    "overviewTitle": "整体流程：从配置到工具结果",
+    "overview": "flowchart LR\n U[用户] -->|提出任务| C[Codex]\n C -->|读取配置并启动| R[uvx 运行器]\n R -->|启动进程| S[MCP Server]\n C -->|发现并调用工具| S\n S -->|访问资源| A[目标服务]\n S -->|返回结果| C",
+    "overviewNote": "这是使用 uvx 启动本地 Server 的示例；Server 也可以是连接远程服务的代理。直接通过 HTTP 连接远程 MCP Server 时，不需要本地 uvx 进程。",
+    "footer": "本页以 Codex 和本地 stdio Server 为例；具体启动、认证和权限取决于配置及服务。相关主题：<a href=\"aws-iam.html\">AWS IAM</a>。",
+    "supplement": "<section class=\"panel supplement\"><h2>程序放在哪里？</h2><p>配置记录启动命令和参数，不是程序本身。使用 <code>uvx</code> 时，它可按需获取 Python 包并使用缓存运行；项目中没有 MCP 文件夹，也可以使用已配置的 Server。首次获取、缓存失效或更新时可能需要网络；运行器本身也必须可用。</p><p>本地 Server 可直接处理请求，也可作为代理连接远程 MCP 服务。直接配置远程 HTTP 地址是另一种连接方式。</p></section><section class=\"panel supplement\"><h2>配置、技能和权限</h2><p>Codex 的全局配置可登记 MCP Server；项目中的 skill 是指导 Codex 完成任务的说明，不能代替 Server。工具可以做什么由 Server、认证身份和目标服务权限共同决定；只读配置也应以实际权限为准。</p><p>参考：<a href=\"https://developers.openai.com/codex/mcp\">Codex MCP 文档</a>、<a href=\"https://docs.astral.sh/uv/guides/tools/\">uv 工具文档</a>。</p></section>"
+  },
   "cacheInvalidation": {
     "title": "缓存更新与失效",
     "heading": "缓存更新与失效",

@@ -5,6 +5,7 @@ const topics = [
   { key: 'oauthPkce', url: 'oauth-pkce.html', category: 'identity' },
   { key: 'oidcLogin', url: 'oidc-login.html', category: 'identity' },
   { key: 'emailCode', url: 'email-code.html', category: 'identity' },
+  { key: 'codexMcp', url: 'codex-mcp.html', category: 'integration' },
   { key: 'webhook', url: 'webhook.html', category: 'integration' },
   { key: 'cacheInvalidation', url: 'cache-invalidation.html', category: 'distributed' },
   { key: 'threeDSecure', url: '3d-secure.html', category: 'payments' },

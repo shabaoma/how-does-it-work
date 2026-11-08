@@ -1,6 +1,7 @@
 const zhContent = require('./content.json');
 const zhMetadata = require('./topics.js');
 const zhSteps = {
+  codexMcp: require('./steps/codex-mcp'),
   sessionCookie: require('./steps/session-cookie'),
   accessSecretToken: require('./steps/access-secret-token'),
   sso: require('./steps/sso'),

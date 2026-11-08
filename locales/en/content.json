@@ -1,4 +1,14 @@
 {
+  "codexMcp": {
+    "title": "How Codex runs MCP",
+    "heading": "How Codex runs MCP",
+    "lead": "Follow how Codex connects to and calls tools using the Model Context Protocol (MCP), with a locally launched MCP server as an example. The program can live outside the project; configuration alone does not prove it started successfully.",
+    "overviewTitle": "Overview: from configuration to result",
+    "overview": "flowchart LR\n U[User] -->|asks for task| C[Codex]\n C -->|reads config and starts| R[uvx runner]\n R -->|starts process| S[MCP server]\n C -->|discovers and calls tools| S\n S -->|accesses resource| A[Target service]\n S -->|returns result| C",
+    "overviewNote": "This example uses uvx to start a local server; the server can also proxy a remote service. A direct HTTP connection to a remote MCP server does not need a local uvx process.",
+    "footer": "This page illustrates Codex with a local stdio server; startup, authentication and permissions depend on the configuration and service. Related topic: <a href=\"aws-iam.html\">AWS IAM</a>.",
+    "supplement": "<section class=\"panel supplement\"><h2>Where is the program?</h2><p>Configuration records the command and arguments, not the program itself. With <code>uvx</code>, Python packages can be fetched on demand and run from a cache; a configured server can work without an MCP folder in the project. Initial fetches, cache misses or updates may need network access, and the runner itself must be available.</p><p>A local server can handle requests itself or proxy a remote MCP service. A directly configured remote HTTP endpoint is another option.</p></section><section class=\"panel supplement\"><h2>Configuration, skills and permissions</h2><p>Codex global configuration can register MCP servers. A project skill contains instructions for a task and does not replace a server. Available actions depend on the server, authenticated identity and target service permissions; verify actual permissions even when configured as read-only.</p><p>References: <a href=\"https://developers.openai.com/codex/mcp\">Codex MCP documentation</a>, <a href=\"https://docs.astral.sh/uv/guides/tools/\">uv tool documentation</a>.</p></section>"
+  },
   "cacheInvalidation": {
     "title": "Cache updates and invalidation",
     "heading": "Cache updates and invalidation",
