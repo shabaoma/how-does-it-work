@@ -1,13 +1,8 @@
-<nav class="site" aria-label="{% if english %}Topics{% else %}主题导航{% endif %}">
-  <a class="site-home" href="index.html"{% if (english and not englishTopic) or (not english and (page.url == '/' or page.url == '/index.html')) %} aria-current="page"{% endif %}><span class="home-icon" aria-hidden="true">⌂</span>{% if english %}Home{% else %}首页{% endif %}</a>
-  {% if english %}{% set navTopics = englishTopics %}{% else %}{% set navTopics = topics %}{% endif %}
-  {% for category, entries in navTopics | groupby('category') %}
-  <div class="site-group">
-    <span class="site-category">{{ category }}</span>
-    <div class="site-links">
-    {% for topic in entries %}<a href="{{ topic.url }}"{% if (english and englishTopic.url == topic.url) or (not english and page.url == '/' + topic.url) %} aria-current="page"{% endif %}>{{ topic.label }}</a>
-    {% endfor %}
-    </div>
-  </div>
+<nav class="site" aria-label="{{ locale.ui.navigation }}">
+  <a class="site-home" href="index.html"{% if currentUrl == 'index.html' %} aria-current="page"{% endif %}><span class="home-icon" aria-hidden="true">⌂</span>{{ locale.ui.home }}</a>
+  {% for category, entries in locale.topics | groupby('category') %}
+  <div class="site-group"><span class="site-category">{{ category }}</span><div class="site-links">
+    {% for topic in entries %}<a href="{{ topic.url }}"{% if currentUrl == topic.url %} aria-current="page"{% endif %}>{{ topic.label }}</a>{% endfor %}
+  </div></div>
   {% endfor %}
 </nav>

@@ -1,8 +1,9 @@
-<div class="step-heading"><h2>{% if english %}Step by step{% else %}分步讲解{% endif %}</h2><p id="step-progress" aria-live="polite" aria-atomic="true"></p></div>
-<div class="steps" id="steps" role="group" aria-label="{% if english %}Flow steps{% else %}流程步骤{% endif %}"></div>
+{% set locale = locale or defaultLocale %}
+<div class="step-heading"><h2>{{ locale.ui.steps }}</h2><p id="step-progress" aria-live="polite" aria-atomic="true"></p></div>
+<div class="steps" id="steps" role="group" aria-label="{{ locale.ui.flowSteps }}"></div>
 <div class="navs">
-  <button class="nav" id="prev" type="button">{% if english %}Previous{% else %}上一步{% endif %}</button>
-  <button class="nav" id="next" type="button">{% if english %}Next{% else %}下一步{% endif %}</button>
+  <button class="nav" id="prev" type="button">{{ locale.ui.previous }}</button>
+  <button class="nav" id="next" type="button">{{ locale.ui.next }}</button>
 </div>
 <div class="layout">
   <section class="panel" aria-labelledby="step-title">
@@ -11,7 +12,7 @@
     <div class="diagram" id="sequence" aria-busy="true"></div>
   </section>
   <section class="panel" aria-labelledby="detail-title">
-    <h2 id="detail-title">{% if english %}What happens in this step{% else %}这一步发生了什么{% endif %}</h2>
+    <h2 id="detail-title">{{ locale.ui.detail }}</h2>
     <p id="detail"></p>
     {% if hasTokens %}<div class="tokens" id="tokens"></div>{% endif %}
     <div class="callout" id="note"></div>

@@ -1,5 +1,6 @@
 (() => {
-  const diagramError = document.documentElement.lang === 'en' ? 'The diagram could not be loaded. Please refresh and try again.' : '图表加载失败，请刷新页面重试。';
+  const strings = window.siteStrings;
+  const diagramError = strings.diagramError;
   const { steps, tokenMeta, tokenDetails, warningToken, warningStep, keyboardNavigation } = window.topicData;
   const stepsEl = document.getElementById('steps');
   const previous = document.getElementById('prev');
@@ -8,7 +9,6 @@
   const tokens = document.getElementById('tokens');
   const note = document.getElementById('note');
   const progress = document.getElementById('step-progress');
-  const english = document.documentElement.lang === 'en';
   let current = 0;
   let focus = null;
   let renderVersion = 0;
@@ -49,7 +49,7 @@
     current = index;
     focus = null;
     const step = steps[index];
-    progress.textContent = english ? `Step ${index + 1} of ${steps.length}` : `第 ${index + 1} 步 / 共 ${steps.length} 步`;
+    progress.textContent = strings.progress.replace('{current}', index + 1).replace('{total}', steps.length);
     document.getElementById('kicker').textContent = step.kicker;
     document.getElementById('step-title').textContent = step.title;
     document.getElementById('detail').textContent = step.detail;
@@ -62,7 +62,7 @@
     paintTokens();
     const version = ++renderVersion;
     sequence.setAttribute('aria-busy', 'true');
-    sequence.textContent = english ? 'Loading diagram…' : '正在加载图表…';
+    sequence.textContent = strings.loading;
     try {
       if (!window.mermaid) throw new Error('Mermaid unavailable');
       const result = await mermaid.render('sequence-' + version, step.diagram);

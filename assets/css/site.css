@@ -88,7 +88,7 @@ li { margin: 8px 0; }
   .sidebar-mobile { display: block; }
   .page-content > header { padding-top: 20px; }
 }
-.language-switch { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 14px; }
+.language-switch { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 14px; }
 .language-switch a { color: var(--blue); }
 .language-switch [aria-current] { color: var(--muted); }
 
