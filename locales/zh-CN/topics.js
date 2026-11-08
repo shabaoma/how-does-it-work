@@ -1,4 +1,5 @@
 module.exports = {
+  awsSsm: { label: 'AWS SSM', title: 'AWS Systems Manager', description: '了解 Session Manager 如何连接托管节点。' },
   cacheInvalidation: { label: '缓存更新与失效', title: '缓存更新与失效', description: '了解 Cache-Aside 的读写流程、并发竞争和旧数据边界。' },
   paymentIdempotency: { label: '支付幂等', title: '支付幂等：安全重试支付请求', description: '了解支付请求超时后如何安全重试并确认结果。' },
   webhook: { label: 'Webhook 事件通知', title: 'Webhook 事件通知', description: '了解服务如何投递、验证和处理异步事件通知。' },

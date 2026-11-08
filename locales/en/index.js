@@ -12,7 +12,8 @@ const steps = {
   threeDSecure: require('./steps/3d-secure'),
   paymentIdempotency: require('./steps/payment-idempotency'),
   awsSts: require('./steps/aws-sts'),
-  awsIam: require('./steps/aws-iam')
+  awsIam: require('./steps/aws-iam'),
+  awsSsm: require('./steps/aws-ssm')
 };
 const topics = Object.fromEntries(Object.keys(metadata).map(key => [key, { ...content[key], ...metadata[key], ...steps[key] }]));
 const en = {

@@ -10,6 +10,7 @@ const topics = [
   { key: 'threeDSecure', url: '3d-secure.html', category: 'payments' },
   { key: 'paymentIdempotency', url: 'payment-idempotency.html', category: 'payments' },
   { key: 'awsSts', url: 'aws-sts.html', category: 'cloud' },
-  { key: 'awsIam', url: 'aws-iam.html', category: 'cloud' }
+  { key: 'awsIam', url: 'aws-iam.html', category: 'cloud' },
+  { key: 'awsSsm', url: 'aws-ssm.html', category: 'cloud' }
 ];
 module.exports = topics;

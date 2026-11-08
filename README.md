@@ -2,6 +2,14 @@
 
 This site uses diagrams and step-by-step explanations to make familiar technologies easier to understand. Explore questions such as how email codes help you sign in, how banks verify cardholders during online payments, and how cloud services manage access.
 
+## Run locally
+
+After installing dependencies with `npm install`, start the development server:
+
+```sh
+npm run serve
+```
+
 ## Topics
 
 **Identity and sign-in**

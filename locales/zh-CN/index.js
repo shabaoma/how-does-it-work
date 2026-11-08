@@ -1,11 +1,20 @@
 const zhContent = require('./content.json');
 const zhMetadata = require('./topics.js');
-const zhSteps = { sessionCookie: require('./steps/session-cookie'), accessSecretToken: require('./steps/access-secret-token'), sso: require('./steps/sso'), emailCode: require('./steps/email-code'), threeDSecure: require('./steps/3d-secure'), awsSts: require('./steps/aws-sts'), awsIam: require('./steps/aws-iam') };
-zhSteps.oauthPkce = require('./steps/oauth-pkce');
-zhSteps.oidcLogin = require('./steps/oidc-login');
-zhSteps.webhook = require('./steps/webhook');
-zhSteps.paymentIdempotency = require('./steps/payment-idempotency');
-zhSteps.cacheInvalidation = require('./steps/cache-invalidation');
+const zhSteps = {
+  sessionCookie: require('./steps/session-cookie'),
+  accessSecretToken: require('./steps/access-secret-token'),
+  sso: require('./steps/sso'),
+  oauthPkce: require('./steps/oauth-pkce'),
+  oidcLogin: require('./steps/oidc-login'),
+  webhook: require('./steps/webhook'),
+  cacheInvalidation: require('./steps/cache-invalidation'),
+  emailCode: require('./steps/email-code'),
+  threeDSecure: require('./steps/3d-secure'),
+  paymentIdempotency: require('./steps/payment-idempotency'),
+  awsSts: require('./steps/aws-sts'),
+  awsIam: require('./steps/aws-iam'),
+  awsSsm: require('./steps/aws-ssm')
+};
 const zhTopics = Object.fromEntries(Object.keys(zhMetadata).map(key => [key, { ...zhContent[key], ...zhMetadata[key], pageTitle: zhContent[key].title, ...zhSteps[key] }]));
 const zh = {
   code: 'zh-CN', prefix: 'zh-CN', name: '简体中文', topics: zhTopics,

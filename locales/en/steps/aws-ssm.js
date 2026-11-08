@@ -1,0 +1,12 @@
+const actors = `actor U as Operator
+participant S as SSM service
+participant A as SSM Agent
+participant N as Managed node`;
+const rows = [
+  ['1 Connect', 'PREPARE', 'Node connects to Systems Manager', 'SSM Agent on the EC2 node uses node credentials to connect to Systems Manager endpoints, making the node available for management.', 'The agent must be running with suitable node permissions and network connectivity; an offline node cannot open a session.', 'A->>S: Connect outbound with node credentials'],
+  ['2 Request session', 'REQUEST', 'Operator requests a session', 'The operator selects a managed node in the console or AWS CLI and requests a session. The service authenticates the caller and checks IAM permissions and session configuration.', 'Caller permissions and node permissions are separate grants.', 'U->>S: StartSession with target node\nS->>S: Check identity, permissions and configuration'],
+  ['3 Open channel', 'CONNECT', 'Service and agent establish a session', 'After checks pass, the service tells the agent to open a bidirectional session channel; the client also connects to the channel.', 'Interactive CLI sessions require the Session Manager plugin. The channel uses TLS; additional KMS encryption can be configured.', 'S->>A: Request session channel\nA->>S: Establish session channel\nU->>S: Connect client channel'],
+  ['4 Interact', 'INTERACT', 'Input and output travel through the channel', 'The operator enters a command, which the service passes to the agent. The command runs on the node and its output returns through the channel to the client.', 'The operating-system identity determines what the command can do; IAM permission to start a session does not itself grant OS privileges.', 'U->>S: Enter command\nS->>A: Forward input\nA->>N: Run command\nN-->>A: Output\nA->>S: Send output\nS-->>U: Display output'],
+  ['5 End session', 'CLOSE', 'Close the session and review records', 'When the operator ends the session, the interactive channel closes. Administrators can investigate activity using configured logs and audit records.', 'API audit records and session content logs are distinct. Content logging must be configured in advance and is not supported for every session type.', 'U->>S: End session\nS->>A: Close session\nS-->>U: Session ended']
+];
+module.exports = { steps: rows.map(([label, kicker, title, detail, note, action]) => ({ label, kicker, title, detail, note, diagram: `sequenceDiagram\n${actors}\n${action}` })) };

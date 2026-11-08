@@ -1,4 +1,5 @@
 module.exports = {
+  awsSsm: { label: 'AWS SSM', title: 'AWS Systems Manager', description: 'See how Session Manager connects to a managed node.' },
   cacheInvalidation: { label: 'Cache updates', title: 'Cache updates and invalidation', description: 'Follow cache-aside reads and writes, including races and stale data.' },
   paymentIdempotency: { label: 'Payment idempotency', title: 'Payment idempotency', description: 'How a payment request can be retried safely after a timeout.' },
   webhook: { label: 'Webhooks', title: 'Webhook event notifications', description: 'How services deliver, verify, and process asynchronous event notifications.' },
