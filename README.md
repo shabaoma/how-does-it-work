@@ -15,6 +15,7 @@ npm run serve
 **Artificial intelligence**
 
 - AI model distillation
+- Multi-agent ISUCON optimization
 
 **Identity and sign-in**
 

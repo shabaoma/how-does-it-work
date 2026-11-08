@@ -1,6 +1,7 @@
 const zhContent = require('./content.json');
 const zhMetadata = require('./topics.js');
 const zhSteps = {
+  isuconAgents: require('./steps/isucon-multi-agent'),
   aiDistillation: require('./steps/ai-distillation'),
   dropboxSync: require('./steps/dropbox-sync'),
   notionSync: require('./steps/notion-sync'),

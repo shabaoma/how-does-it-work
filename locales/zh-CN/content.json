@@ -190,5 +190,15 @@
     "overview": "flowchart LR\n    D[训练输入] -->|提供问题| T[教师模型]\n    T -->|生成答案或概率| C[训练样本]\n    D -->|输入| C\n    C -->|训练| S[学生模型]\n    E[独立评估集] -->|评估| S\n    S -->|通过评估后部署| A[应用]",
     "overviewNote": "教师主要在准备数据或训练阶段提供指导；部署后的学生通常独立回答，不需要每次调用教师。",
     "supplement": "<section class=\"panel supplement\"><h2>方法和边界</h2><ul><li><strong>文本蒸馏：</strong>教师生成答案，学生把答案当作训练目标；只需要教师输出文本，但无法直接学习完整概率分布。</li><li><strong>概率蒸馏：</strong>可取得教师 logits 或概率时，让学生的预测分布接近教师，常用温度和 KL 散度；通常需要兼容的输出空间，且可与真实标签的损失结合。</li><li><strong>成本与效果：</strong>生成数据和训练本身需要算力；较小模型可能更快、更便宜，但也可能损失能力，需在目标硬件上测量。</li><li><strong>质量与权限：</strong>教师可能产生错误或偏见；检查数据质量、隐私、来源和模型服务条款。独立评估不能使用训练样本充当测试集。</li></ul><p>参考：<a href=\"https://arxiv.org/abs/1503.02531\">Distilling the Knowledge in a Neural Network</a></p></section>"
+  },
+  "isuconAgents": {
+    "title": "一个人如何用多 Agent 参加 ISUCON",
+    "heading": "一个人如何用多 Agent 参加 ISUCON",
+    "lead": "据参赛者 Yoshinori Kawasaki 的复盘，他赛前设计执行框架，让主 Agent 在比赛中自主分析、修改和测试，并在进展停滞时借助审计子 Agent 重新检查。人的准备、工具反馈和停止规则共同支撑了这次单人参赛。",
+    "footer": "本页依据参赛者的<a href=\"https://zenn.dev/luvtechno/articles/isucon2026-competition-day\">比赛当日复盘</a>整理；具体行为与结果属于该次比赛，不保证在其他环境复现。",
+    "overviewTitle": "整体流程：人设计环境，Agent 循环实验",
+    "overview": "flowchart LR\n    H[参赛者] -->|赛前准备目标与工具| M[主 Agent]\n    M -->|分析 修改 部署| S[比赛服务]\n    S -->|指标 日志 测试结果| M\n    M -->|停滞时启动审计| A[审计子 Agent]\n    A -->|检查遗漏与建议| M\n    M -->|比较结果并决策| D[保留 回退 或停止]",
+    "overviewNote": "多 Agent 的关键分工是主 Agent 负责执行与决策，审计子 Agent 提供独立检查；比赛过程仍由测试和规则约束。",
+    "supplement": "<section class=\"panel supplement\"><h2>从案例中学习什么</h2><ul><li><strong>架构实验：</strong>复盘描述了集中排序写入、操作日志复制和本地读取；这是单一排序节点的方案，不等同于 Raft 共识，故障和一致性边界需要单独设计。</li><li><strong>观测驱动：</strong>通过基准测试、日志和 pprof 寻找瓶颈，再比较修改前后的结果；测试分数变化不能都归因于单个改动。</li><li><strong>比赛目标：</strong>复盘中通过延迟部分低权重地区请求改善评分。这是对特定负载与评分规则的适配，不应直接用于生产系统。</li><li><strong>生产边界：</strong>简化图片验证、单点写入和特定内存参数可能影响正确性、可用性或用户体验，需要按实际业务重新评估。</li></ul><p>相关主题：<a href=\"ai-distillation.html\">AI 模型蒸馏</a> · <a href=\"codex-mcp.html\">Codex 和 MCP</a></p></section>"
   }
 }
