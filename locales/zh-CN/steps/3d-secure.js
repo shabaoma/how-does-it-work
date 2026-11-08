@@ -46,4 +46,4 @@ const steps = [
     M-->>U: 显示成功或失败`}
 ];
 
-window.topicData = { steps };
+module.exports = { steps };

@@ -36,7 +36,7 @@
     <div class="page-content">
       <header>
         <div class="language-switch" aria-label="{{ locale.ui.language }}">
-          {% for language in locales %}
+          {% for language in locales | reverse %}
             {% set available = currentUrl == 'index.html' %}
             {% for item in language.topics %}{% if item.url == currentUrl %}{% set available = true %}{% endif %}{% endfor %}
             {% if available %}

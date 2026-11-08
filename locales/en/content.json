@@ -1,0 +1,51 @@
+{
+  "sessionCookie": {
+    "lead": "The server stores login state and sends an opaque session identifier in Set-Cookie. The browser sends the cookie on matching requests, allowing the server to find the session.",
+    "overview": "flowchart LR\n B[Browser] -->|Credentials| S[Server]\n S -->|Save session| D[(Session store)]\n S -->|Set-Cookie| B\n B -->|Later request with cookie| S\n S -->|Look up session| D\n S -->|Response| B",
+    "overviewNote": "The cookie carries an identifier; the server checks the session store for login state.",
+    "extra": "The session store holds login state; the cookie carries its identifier. HttpOnly prevents page scripts from reading the cookie, Secure limits transmission to HTTPS, and SameSite mitigates some cross-site request forgery scenarios.",
+    "footer": "This illustrates a common browser session cookie flow; behavior depends on the application."
+  },
+  "accessSecretToken": {
+    "lead": "After authentication, a client may receive an access token for API calls and a longer-lived secret token for obtaining a new access token. In OAuth, the latter is usually called a refresh token.",
+    "overview": "flowchart LR\n C[Client] -->|Login credentials| A[Authentication server]\n A -->|Access and refresh tokens| C\n C -->|Access token| B[Business server]\n B -->|Response| C\n C -.->|Refresh token when needed| A",
+    "overviewNote": "The secret token in this example is a refresh token. Issuance and rotation depend on the system design.",
+    "extra": "An access token is sent to the resource server, often in Authorization: Bearer. A refresh token is sent to the authentication server. A client secret identifies a confidential application and is a different credential.",
+    "footer": "This is a general token login flow. Actual issuance, validation, and revocation depend on the system."
+  },
+  "sso": {
+    "lead": "Single sign-on (SSO) lets an application delegate authentication to an external identity provider. The user authenticates through browser redirects, and the application creates its own session. Signing out of the application and the identity provider are separate operations. This example uses OpenID Connect (OIDC) authorization code flow with a server-side application.",
+    "overview": "flowchart LR\n U[User] -->|Acts| B[Browser]\n B -->|Access and callback| A[Application]\n B -->|Authentication and optional logout| I[Identity provider]\n A -->|Exchange authorization code| I\n I -.->|Optional logout notification| A",
+    "overviewNote": "The browser follows redirects; the application and identity provider maintain separate sessions. The dashed line represents an optional notification when both sides support and configure it.",
+    "supplement": "<section class=\"panel supplement\"><h2>Sessions and logout scope</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">Session</th><th scope=\"col\">Purpose</th><th scope=\"col\">Effect of logout</th></tr></thead><tbody><tr><th scope=\"row\">Application session</th><td>Identifies the user on later application requests.</td><td>Ending it signs the user out of this application; the provider session may remain active.</td></tr><tr><th scope=\"row\">Identity provider session</th><td>Remembers authentication so other applications can reuse it.</td><td>Ending it usually requires authentication again; existing application sessions do not necessarily end at the same time.</td></tr></tbody></table></div><p class=\"callout\">After local logout, an active provider session may allow the user to sign in again without entering credentials.</p></section><section class=\"panel supplement\"><h2>Integration and logout boundaries</h2><ul><li><strong>Establish trust:</strong> Register the client and exact callback addresses, obtain endpoints and signing keys from trusted configuration, and use HTTPS throughout.</li><li><strong>Protect the callback:</strong> Validate <code>state</code>, bind the authorization code with PKCE, and validate <code>nonce</code> when sent. Validate the ID token signature, issuer, audience, expiry and other applicable claims before creating a session.</li><li><strong>Map accounts:</strong> Identify an external identity by its trusted issuer <code>iss</code> and subject <code>sub</code>. Account creation and linking are application policy; do not link solely on an unverified email address.</li><li><strong>Logout propagation:</strong> Provider logout and notification of other applications are independent capabilities. Front-channel or back-channel notifications require support and configuration and can fail.</li><li><strong>Token lifetime:</strong> Ending sessions does not necessarily revoke issued access tokens. Revoke tokens when needed and supported, and control their lifetimes.</li></ul><p>References: <a href=\"https://openid.net/specs/openid-connect-core-1_0.html\">OIDC Core</a> · <a href=\"https://openid.net/specs/openid-connect-rpinitiated-1_0-final.html\">RP-initiated logout</a> · <a href=\"https://openid.net/specs/openid-connect-backchannel-1_0-final.html\">Back-channel logout</a></p></section>",
+    "footer": "This example uses a server-side OIDC application; provider capabilities and parameters vary. See <a href=\"session-cookie.html\">Session cookie login</a>."
+  },
+  "emailCode": {
+    "lead": "A user submits an email address and receives a one-time code. The server verifies the code and establishes a login session; possession of the code demonstrates current access to the mailbox.",
+    "overview": "flowchart LR\n U[User] -->|Email and code| B[Browser or app]\n B -->|HTTPS requests| A[Authentication service]\n A -->|Store and verify code| R[(Code store)]\n A -->|Send email| M[Email provider]\n M -->|Deliver code| E[Mailbox]\n E -->|User reads code| U\n A -->|Create session| S[(Session store)]\n A -->|Session cookie| B",
+    "overviewNote": "The code is used for this authentication attempt; a new session maintains subsequent login state.",
+    "extra": "Use cryptographically secure random codes, short expirations, one-time consumption, and rate limits. Protect stored verification values, avoid account enumeration, and use HTTPS. Email codes depend on mailbox security and are not phishing-resistant multifactor authentication.",
+    "footer": "This example uses a session cookie; other systems may issue tokens."
+  },
+  "threeDSecure": {
+    "lead": "3D Secure (3DS) lets a merchant request cardholder authentication through the card network and issuing bank. The issuer assesses risk and may require a challenge. Payment authorization is a separate step.",
+    "overview": "flowchart LR\n U[Cardholder] -->|Submit payment| M[Merchant or payment provider]\n M -->|3DS request| D[Directory server]\n D -->|Authentication request| A[Issuer authentication system]\n A -.->|Challenge when needed| U\n A -->|Authentication result| D\n D -->|Authentication result| M\n M -->|Payment authorization| P[Payment network]\n P -->|Authorization request| I[Issuer]",
+    "overviewNote": "The three domains are the acquirer, interoperability, and issuer domains. Deployments and roles vary.",
+    "extra": "Frictionless and challenge are possible authentication paths, not guarantees of success. Liability shift depends on network rules and transaction outcomes. 3DS does not prevent a user from being tricked into approving a fraudulent transaction.",
+    "footer": "This is a common 3DS flow; follow the applicable payment provider and card network requirements."
+  },
+  "awsSts": {
+    "lead": "AWS Security Token Service (STS) issues temporary credentials for an IAM role. This example uses cross-account AssumeRole: permission to assume a role and permission to access a resource are separate checks.",
+    "overview": "flowchart LR\n C[Caller] -->|AssumeRole| S[STS]\n S -->|Check trust and permissions| I[IAM policies]\n S -->|Temporary credentials| C\n C -->|Signed request and session token| R[AWS resource service]\n R -->|Authorized response| C",
+    "overviewNote": "This example uses a cross-account role; federation and AWS service credential paths differ.",
+    "extra": "Session policies can restrict role permissions but do not expand the role’s identity-based permissions. AssumeRoleWithWebIdentity and AssumeRoleWithSAML use different federation inputs. Explicit denies and other applicable policy limits still apply.",
+    "footer": "This example covers programmatic cross-account AssumeRole; other STS operations have different requirements."
+  },
+  "awsIam": {
+    "lead": "AWS Identity and Access Management (IAM) helps control who can perform actions on AWS resources. This example follows a role session reading an Amazon S3 object in the same account.",
+    "overview": "flowchart LR\n C[Caller] -->|Signed read request| S[S3 service]\n S -->|Authenticate and evaluate| P[IAM authorization]\n P -->|Allow or deny| S\n S -->|Read if allowed| R[(S3 object)]\n S -->|Result or error| C",
+    "overviewNote": "The caller already has temporary role credentials. IAM authorization here represents AWS evaluation, not a public IAM API call for every request.",
+    "extra": "Identity and resource policies can grant permissions. Permissions boundaries, session policies, and applicable organization policies can limit access; direct resource-policy grants to certain principals have special rules. Cross-account access generally requires permission on both sides. A role trust policy governs assumption of the role, while resource access is evaluated separately.",
+    "footer": "This is a simplified same-account request. See <a href=\"aws-sts.html\">AWS STS</a> for obtaining role credentials and <a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html\">AWS policy evaluation</a> for details."
+  }
+}

@@ -41,4 +41,4 @@ const steps = [
     API-->>B: 返回业务数据`}
 ];
 
-window.topicData = { steps };
+module.exports = { steps };

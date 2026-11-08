@@ -94,4 +94,4 @@ const tokenDetails = {
     sid: "cookie 的值是随机编号。拿到它的人在过期前可以带着同一个 Cookie 头访问，所以要走 HTTPS，并尽快在登出时删掉服务器记录。",
     attrs: "HttpOnly 挡住页面脚本读取。Secure 限制为 HTTPS。SameSite=Lax 时，从别的网站点过来的普通跳转会带上 cookie，别的网站用表单或脚本偷偷发起的请求则不带。"
   };
-window.topicData = { steps, tokenMeta, tokenDetails, warningToken: "sid", warningStep: 4, keyboardNavigation: true };
+module.exports = { steps, tokenMeta, tokenDetails, warningToken: "sid", warningStep: 4, keyboardNavigation: true };
