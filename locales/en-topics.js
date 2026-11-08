@@ -60,6 +60,21 @@ module.exports = {
     extra: 'Frictionless and challenge are possible authentication paths, not guarantees of success. Liability shift depends on network rules and transaction outcomes. 3DS does not prevent a user from being tricked into approving a fraudulent transaction.',
     footer: 'This is a common 3DS flow; follow the applicable payment provider and card network requirements.'
   },
+  awsIam: {
+    label: 'AWS IAM', title: 'How AWS IAM works',
+    description: 'How AWS authenticates requests and evaluates access permissions.',
+    lead: 'AWS Identity and Access Management (IAM) helps control who can perform actions on AWS resources. This example follows a role session reading an Amazon S3 object in the same account.',
+    overview: 'flowchart LR\n C[Caller] -->|Signed read request| S[S3 service]\n S -->|Authenticate and evaluate| P[IAM authorization]\n P -->|Allow or deny| S\n S -->|Read if allowed| R[(S3 object)]\n S -->|Result or error| C',
+    overviewNote: 'The caller already has temporary role credentials. IAM authorization here represents AWS evaluation, not a public IAM API call for every request.',
+    steps: [
+      step('1 Send request','Sign an object request','The caller signs an S3 GetObject request with temporary role credentials and supplies the access key ID and session token.','The secret access key is used to calculate the signature and is not sent as a request parameter.','participant C as Caller\n participant S as S3 service\n participant P as IAM authorization\n participant R as S3 object\n C->>S: Signed GetObject request and session token'),
+      step('2 Authenticate','Validate the credentials','AWS validates the signature and temporary credentials and identifies the role session.','Invalid or expired credentials cause the request to fail. Some services also support anonymous requests.','participant C as Caller\n participant S as S3 service\n participant P as IAM authorization\n participant R as S3 object\n S->>S: Validate signature and credentials\n alt Invalid credentials\n S-->>C: Error\n end'),
+      step('3 Evaluate','Evaluate applicable policies','AWS evaluates applicable policies against the principal, action, resource and request context. An applicable explicit deny overrides allows; absent a sufficient allow, the request is implicitly denied.','Policy types and the principal named in a resource policy affect evaluation.','participant C as Caller\n participant S as S3 service\n participant P as IAM authorization\n participant R as S3 object\n S->>P: Evaluate request context\n P-->>S: Allow or deny'),
+      step('4 Return result','Execute or reject the request','If authorization and other service checks succeed, S3 reads and returns the object. A denied request returns an access error.','An allowed request may still fail, for example if the object is missing or a required encryption key permission is absent.','participant C as Caller\n participant S as S3 service\n participant P as IAM authorization\n participant R as S3 object\n alt Allowed and other checks pass\n S->>R: Read object\n R-->>S: Object data\n S-->>C: Return object\n else Denied or other error\n S-->>C: Return error\n end')
+    ],
+    extra: 'Identity and resource policies can grant permissions. Permissions boundaries, session policies, and applicable organization policies can limit access; direct resource-policy grants to certain principals have special rules. Cross-account access generally requires permission on both sides. A role trust policy governs assumption of the role, while resource access is evaluated separately.',
+    footer: 'This is a simplified same-account request. See <a href="aws-sts.html">AWS STS</a> for obtaining role credentials and <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html">AWS policy evaluation</a> for details.'
+  },
   awsSts: {
     label: 'AWS STS', title: 'How AWS STS works',
     description: 'Learn about temporary credentials and permissions using cross-account AssumeRole.',

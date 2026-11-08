@@ -1,0 +1,48 @@
+---
+layout: "layouts/topic.njk"
+title: "外部 SSO 登录与退出"
+heading: "外部 SSO 登录与退出"
+lead: "单点登录（SSO）让应用把身份认证交给外部身份提供方。用户通过浏览器跳转完成认证，应用再建立自己的会话；退出应用和退出身份提供方是不同的操作。下面以 OpenID Connect（OIDC）授权码流程和服务端应用为例。"
+footer: "本页以 OIDC 服务端应用为例；具体参数和退出能力取决于身份提供方。继续了解 <a href=\"session-cookie.html\">Session Cookie</a>。"
+topicScript: "sso"
+hasTokens: false
+permalink: "sso.html"
+---
+<main>
+  <section class="panel" aria-labelledby="overview-title">
+    <p class="kicker">OVERVIEW</p>
+    <h2 id="overview-title">整体流程：应用与外部身份提供方协作</h2>
+    <div class="diagram mermaid">
+flowchart LR
+    U[用户] -->|操作| B[浏览器]
+    B -->|访问和回调| A[应用]
+    B -->|认证和可选退出| I[身份提供方]
+    A -->|交换授权码| I
+    I -.->|可选：退出通知| A
+    </div>
+    <p class="callout">浏览器负责跳转，应用与身份提供方分别维护会话。虚线表示双方配置并支持时，身份提供方可通知应用退出。</p>
+  </section>
+  {% include "parts/steps.njk" %}
+  <section class="panel supplement" aria-labelledby="sessions-title">
+    <h2 id="sessions-title">两种会话与退出范围</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th scope="col">会话</th><th scope="col">作用</th><th scope="col">退出后的影响</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">应用会话</th><td>应用识别后续请求中的用户。</td><td>清除本地会话后，该应用不再认可它；身份提供方会话可能仍有效。</td></tr>
+        <tr><th scope="row">身份提供方会话</th><td>身份提供方记住已认证用户，让其他应用可以复用认证状态。</td><td>结束后通常需要重新认证；其他应用已有的本地会话不一定同时失效。</td></tr>
+      </tbody>
+    </table></div>
+    <p class="callout">只退出应用后再次点击登录，若身份提供方会话仍有效，用户可能无需再次输入凭据。</p>
+  </section>
+  <section class="panel supplement" aria-labelledby="boundary-title">
+    <h2 id="boundary-title">接入与退出的关键边界</h2>
+    <ul>
+      <li><strong>事先建立信任：</strong>在身份提供方注册客户端和精确的回调地址，使用可信配置获取端点和签名密钥；全程使用 HTTPS。</li>
+      <li><strong>保护登录回调：</strong>校验 <code>state</code> 以关联请求和回调；使用 PKCE 绑定授权码，并在发送 <code>nonce</code> 时校验它。校验 ID Token 的签名、签发方、受众和有效期等，失败则不建立会话。</li>
+      <li><strong>账号映射：</strong>使用可信签发方 <code>iss</code> 与主体 <code>sub</code> 标识外部身份；是否自动创建或关联本地账号由应用策略决定，不应仅凭未经验证的邮箱绑定账号。</li>
+      <li><strong>退出传播：</strong>应用发起的身份提供方退出与向其他应用传播退出是独立能力。前端或后端通知需要对应应用和提供方支持与配置，通知也可能失败，不能保证所有会话立即结束。</li>
+      <li><strong>令牌生命周期：</strong>清除会话或退出身份提供方不一定撤销已签发的访问令牌；需要时按提供方能力撤销令牌，并控制其有效期。</li>
+    </ul>
+    <p>参考：<a href="https://openid.net/specs/openid-connect-core-1_0.html">OIDC Core</a> · <a href="https://openid.net/specs/openid-connect-rpinitiated-1_0-final.html">应用发起的退出</a> · <a href="https://openid.net/specs/openid-connect-backchannel-1_0-final.html">后端退出通知</a></p>
+  </section>
+</main>

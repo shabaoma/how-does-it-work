@@ -1,7 +1,9 @@
 module.exports = {
+  sso: { label: '外部 SSO 登录与退出', title: '外部 SSO 登录与退出', description: '以 OpenID Connect 为例，了解单点登录、应用会话和退出传播。' },
   sessionCookie: { label: 'Session Cookie', title: 'Session Cookie 登录', description: '浏览器如何保存会话标识，以及服务器如何恢复登录状态。' },
   accessSecretToken: { label: 'Access / Secret', title: 'Access token 与 Secret token', description: '了解访问令牌与秘密令牌如何参与身份验证，以及各自需要保护的边界。' },
   emailCode: { label: '邮箱验证码', title: '邮箱验证码登录', description: '从发送验证码到验证身份，了解一次邮箱登录的过程。' },
   threeDSecure: { label: '3D Secure', title: '3D Secure 在线支付认证', description: '了解在线支付中持卡人认证的参与方与流程。' },
+  awsIam: { label: 'AWS IAM', title: 'AWS IAM 权限管理', description: '了解 AWS 如何验证请求并评估访问资源的权限。' },
   awsSts: { label: 'AWS STS', title: 'AWS STS 临时凭证', description: '以跨账户 AssumeRole 为例，了解临时凭证与权限检查。' }
 };
