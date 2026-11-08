@@ -1,21 +1,6 @@
 const step = (label, title, detail, note, diagram) => ({ label, title, detail, note, kicker: 'STEP', diagram: `sequenceDiagram\n${diagram}` });
 module.exports = [
   {
-    url: 'access-secret-token.html', label: 'Access / Secret', category: 'Identity and login', title: 'Access tokens and secret tokens',
-    description: 'How access and refresh tokens support authentication and where each must be protected.',
-    lead: 'After authentication, a client may receive an access token for API calls and a longer-lived secret token for obtaining a new access token. In OAuth, the latter is usually called a refresh token.',
-    overview: 'flowchart LR\n C[Client] -->|Login credentials| A[Authentication server]\n A -->|Access and refresh tokens| C\n C -->|Access token| B[Business server]\n B -->|Response| C\n C -.->|Refresh token when needed| A',
-    overviewNote: 'The secret token in this example is a refresh token. Issuance and rotation depend on the system design.',
-    steps: [
-      step('1 Sign in','Obtain tokens','The client submits credentials to the authentication server. After successful authentication, the server may issue access and refresh tokens.','A refresh token must be kept secret and sent only to the authentication server.','participant C as Client\n participant A as Authentication server\n C->>A: Submit credentials\n A->>A: Verify identity\n A-->>C: Access and refresh tokens'),
-      step('2 Call an API','Use the access token','The client sends the access token to the business server, which checks it and its permissions before handling the request.','A valid token does not necessarily grant permission for every operation.','participant C as Client\n participant B as Business server\n C->>B: Request with access token\n B->>B: Validate token and permissions\n B-->>C: Response'),
-      step('3 Refresh','Request a new access token','When an access token expires, the client can present a valid refresh token to the authentication server to obtain another.','The server may rotate the refresh token or refuse an expired or revoked token.','participant C as Client\n participant A as Authentication server\n C->>A: Submit refresh token\n A->>A: Check token\n A-->>C: New access token'),
-      step('4 Sign out','End the refresh session','The authentication server can revoke the refresh token so it cannot be used to obtain further access tokens.','An already issued access token may remain usable until expiry unless the system also checks revocation.','participant C as Client\n participant A as Authentication server\n C->>A: Sign out or revoke token\n A->>A: Revoke refresh token\n A-->>C: Confirmation')
-    ],
-    extra: 'An access token is sent to the resource server, often in Authorization: Bearer. A refresh token is sent to the authentication server. A client secret identifies a confidential application and is a different credential.',
-    footer: 'This is a general token login flow. Actual issuance, validation, and revocation depend on the system.'
-  },
-  {
     url: 'session-cookie.html', label: 'Session Cookie', category: 'Identity and login', title: 'Session cookie login',
     description: 'How a browser stores a session identifier and a server restores login state.',
     lead: 'The server stores login state and sends an opaque session identifier in Set-Cookie. The browser sends the cookie on matching requests, allowing the server to find the session.',
@@ -29,6 +14,21 @@ module.exports = [
     ],
     extra: 'The session store holds login state; the cookie carries its identifier. HttpOnly prevents page scripts from reading the cookie, Secure limits transmission to HTTPS, and SameSite mitigates some cross-site request forgery scenarios.',
     footer: 'This illustrates a common browser session cookie flow; behavior depends on the application.'
+  },
+  {
+    url: 'access-secret-token.html', label: 'Access / Secret', category: 'Identity and login', title: 'Access tokens and secret tokens',
+    description: 'How access and refresh tokens support authentication and where each must be protected.',
+    lead: 'After authentication, a client may receive an access token for API calls and a longer-lived secret token for obtaining a new access token. In OAuth, the latter is usually called a refresh token.',
+    overview: 'flowchart LR\n C[Client] -->|Login credentials| A[Authentication server]\n A -->|Access and refresh tokens| C\n C -->|Access token| B[Business server]\n B -->|Response| C\n C -.->|Refresh token when needed| A',
+    overviewNote: 'The secret token in this example is a refresh token. Issuance and rotation depend on the system design.',
+    steps: [
+      step('1 Sign in','Obtain tokens','The client submits credentials to the authentication server. After successful authentication, the server may issue access and refresh tokens.','A refresh token must be kept secret and sent only to the authentication server.','participant C as Client\n participant A as Authentication server\n C->>A: Submit credentials\n A->>A: Verify identity\n A-->>C: Access and refresh tokens'),
+      step('2 Call an API','Use the access token','The client sends the access token to the business server, which checks it and its permissions before handling the request.','A valid token does not necessarily grant permission for every operation.','participant C as Client\n participant B as Business server\n C->>B: Request with access token\n B->>B: Validate token and permissions\n B-->>C: Response'),
+      step('3 Refresh','Request a new access token','When an access token expires, the client can present a valid refresh token to the authentication server to obtain another.','The server may rotate the refresh token or refuse an expired or revoked token.','participant C as Client\n participant A as Authentication server\n C->>A: Submit refresh token\n A->>A: Check token\n A-->>C: New access token'),
+      step('4 Sign out','End the refresh session','The authentication server can revoke the refresh token so it cannot be used to obtain further access tokens.','An already issued access token may remain usable until expiry unless the system also checks revocation.','participant C as Client\n participant A as Authentication server\n C->>A: Sign out or revoke token\n A->>A: Revoke refresh token\n A-->>C: Confirmation')
+    ],
+    extra: 'An access token is sent to the resource server, often in Authorization: Bearer. A refresh token is sent to the authentication server. A client secret identifies a confidential application and is a different credential.',
+    footer: 'This is a general token login flow. Actual issuance, validation, and revocation depend on the system.'
   },
   {
     url: 'email-code.html', label: 'Email code', category: 'Identity and login', title: 'Email verification code login',
