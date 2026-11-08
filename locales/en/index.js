@@ -1,6 +1,7 @@
 const content = require('./content.json');
 const metadata = require('./topics');
 const steps = {
+  notionSync: require('./steps/notion-sync'),
   codexMcp: require('./steps/codex-mcp'),
   sessionCookie: require('./steps/session-cookie'),
   accessSecretToken: require('./steps/access-secret-token'),

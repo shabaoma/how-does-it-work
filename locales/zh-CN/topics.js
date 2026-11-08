@@ -1,4 +1,5 @@
 module.exports = {
+  notionSync: { label: 'Notion 跨设备同步', title: 'Notion 如何跨设备同步', description: '了解离线页面的本地存储、更新通知和冲突处理。' },
   codexMcp: { label: 'Codex 与 MCP', title: 'Codex 如何运行 MCP', description: '了解配置、启动和工具调用。' },
   awsSsm: { label: 'AWS SSM', title: 'AWS Systems Manager', description: '了解 Session Manager 如何连接托管节点。' },
   cacheInvalidation: { label: '缓存更新与失效', title: '缓存更新与失效', description: '了解 Cache-Aside 的读写流程、并发竞争和旧数据边界。' },

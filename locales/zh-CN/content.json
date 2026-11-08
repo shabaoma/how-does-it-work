@@ -150,5 +150,15 @@
     "overviewNote": "节点需运行 SSM Agent，并具备节点权限和到 AWS 服务端点的出站网络连接；无需为 Session Manager 开放节点入站 SSH 端口。",
     "footer": "本页以 EC2 上的交互式 shell 为例；其他会话类型及混合环境有不同配置。相关主题：<a href=\"aws-iam.html\">AWS IAM</a>。",
     "supplement": "<section class=\"panel supplement\"><h2>相关功能与边界</h2><div class=\"table-scroll\"><table><thead><tr><th>功能</th><th>用途</th></tr></thead><tbody><tr><th>Session Manager</th><td>建立交互会话，也支持端口转发等会话类型。</td></tr><tr><th>Run Command</th><td>向一个或多个托管节点发送 SSM 文档，异步执行并查看状态。</td></tr><tr><th>Parameter Store</th><td>存储和读取配置及密钥参数；它不是连接节点所必需的组件。</td></tr></tbody></table></div></section><section class=\"panel supplement\"><h2>权限、网络与记录</h2><ul><li>操作员需要允许启动会话的 IAM 权限；节点需要独立的服务权限。操作系统内的执行身份和权限也需配置。</li><li>节点通过 HTTPS 出站连接服务端点，可使用合适的网络路径或 VPC 接口端点；没有公网 IP 不代表不需要网络连接。</li><li>CloudTrail 可记录 API 调用；会话内容日志需另行配置。通过 SSH 或端口转发的会话内容无法由 Session Manager 记录。</li></ul><p>参考：<a href=\"https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html\">Session Manager</a>、<a href=\"https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent.html\">SSM Agent</a>、<a href=\"https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-logging.html\">会话日志</a>。</p></section>"
+  },
+  "notionSync": {
+    "title": "Notion 如何跨设备同步",
+    "heading": "Notion 如何跨设备同步",
+    "lead": "同一工作区的页面可以在电脑和手机上继续编辑。本例聚焦已下载到设备的离线页面：客户端在本地保存数据，联网后与 Notion 服务同步；并发修改的合并结果取决于内容类型。",
+    "overviewTitle": "整体流程：从本地编辑到其他设备",
+    "overview": "flowchart LR\n A[设备 A] -->|提交修改| S[Notion 服务]\n S -->|页面更新通知| B[设备 B]\n B -->|拉取最新页面| S\n A -.->|重连后同步离线修改| S",
+    "overviewNote": "设备通过服务交换更新，不直接互传。虚线表示设备 A 离线编辑后重新联网的路径；通知触发设备 B 拉取，而非代表通知本身包含完整页面。",
+    "supplement": "<section class=\"panel supplement\"><h2>离线范围与冲突</h2><ul><li><strong>设备范围：</strong>手动下载只在当前设备生效；子页面需要分别下载。桌面和移动应用支持离线页面，浏览器不支持该离线功能。</li><li><strong>数据库：</strong>下载数据库时默认包含第一个视图的前 50 行，其他需要的行须单独下载。</li><li><strong>冲突：</strong>Notion 尝试自动合并文本编辑，但非文本修改仍可能冲突，例如两个离线设备修改同一个单选属性时最终可能只保留一个值。</li><li><strong>可用性：</strong>离线时无法更改分享或权限；依赖网络的嵌入、表单等功能不可用。同步前其他设备看不到离线修改。</li></ul><p>资料：<a href=\"https://www.notion.com/blog/how-we-made-notion-available-offline\">Notion 离线架构</a> · <a href=\"https://www.notion.com/blog/how-notion-handles-concurrent-editing-with-crdts\">并发文本编辑</a> · <a href=\"https://www.notion.com/help/use-pages-offline\">离线使用帮助</a></p></section>",
+    "footer": "本页依据 Notion 公开的离线页面架构说明，细节可能随产品演进。另见 <a href=\"cache-invalidation.html\">缓存更新与失效</a>。"
   }
 }
