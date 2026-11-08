@@ -1,7 +1,7 @@
 const topicDefinitions = require('./topics');
 const localeDefinitions = require('./locales');
 // Update when the home page content or topic listing changes.
-const homeUpdated = '2026-11-08';
+const homeUpdated = '2026-11-09';
 const validDate = value => {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const parsed = new Date(value + 'T00:00:00Z');
@@ -31,7 +31,10 @@ module.exports = function (config) {
   config.addGlobalData('locales', locales);
   config.addGlobalData('defaultLocale', defaultLocale);
   config.addGlobalData('localizedPages', localizedPages);
-  config.addGlobalData('legacyPages', ['index.html', ...topicDefinitions.map(topic => topic.url)].map(url => ({ url, target: `${defaultLocale.prefix}/${url}` }))); 
+  config.addGlobalData('legacyPages', [
+    { url: 'index.html', target: 'en/index.html', lang: 'en' },
+    ...topicDefinitions.map(topic => ({ url: topic.url, target: `${defaultLocale.prefix}/${topic.url}`, lang: defaultLocale.code }))
+  ]);
   config.addFilter('jsonForScript', value => JSON.stringify(value).replace(/</g, '\\u003c'));
   config.addPassthroughCopy('assets');
   config.addPassthroughCopy({ 'node_modules/bootstrap/dist/css/bootstrap-grid.min.css': 'assets/css/bootstrap-grid.min.css' });
