@@ -1,4 +1,5 @@
 (() => {
+  const diagramError = document.documentElement.lang === 'en' ? 'The diagram could not be loaded. Please refresh and try again.' : '图表加载失败，请刷新页面重试。';
   const { steps, tokenMeta, tokenDetails, warningToken, warningStep, keyboardNavigation } = window.topicData;
   const stepsEl = document.getElementById('steps');
   const previous = document.getElementById('prev');
@@ -23,7 +24,7 @@
       }
     });
   } else {
-    document.querySelectorAll('.mermaid').forEach(element => { element.textContent = '图表加载失败，请刷新页面重试。'; });
+    document.querySelectorAll('.mermaid').forEach(element => { element.textContent = diagramError; });
   }
 
   function paintTokens() {
@@ -60,7 +61,7 @@
       const result = await mermaid.render('sequence-' + version, step.diagram);
       if (version === renderVersion) sequence.innerHTML = result.svg;
     } catch (error) {
-      if (version === renderVersion) sequence.textContent = '图表加载失败，请刷新页面重试。';
+      if (version === renderVersion) sequence.textContent = diagramError;
     }
   }
 
