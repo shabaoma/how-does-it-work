@@ -1,6 +1,7 @@
 const content = require('./content.json');
 const metadata = require('./topics');
 const steps = {
+  aiDistillation: require('./steps/ai-distillation'),
   dropboxSync: require('./steps/dropbox-sync'),
   notionSync: require('./steps/notion-sync'),
   socialNetwork: require('./steps/social-network'),
@@ -22,7 +23,7 @@ const steps = {
 const topics = Object.fromEntries(Object.keys(metadata).map(key => [key, { ...content[key], ...metadata[key], ...steps[key] }]));
 const en = {
   code: 'en', prefix: 'en', name: 'English', topics,
-  categories: { identity: 'Identity and login', integration: 'Service integration', distributed: 'Distributed systems', payments: 'Payments', cloud: 'Cloud services' },
+  categories: { ai: 'Artificial intelligence', identity: 'Identity and login', integration: 'Service integration', distributed: 'Distributed systems', payments: 'Payments', cloud: 'Cloud services' },
   home: { title: 'How technology works', description: 'Understand technology through diagrams and step-by-step explanations.', lead: 'Explore common technologies through their participants, data flows, and key boundaries.', footer: 'These pages illustrate common flows; consult the relevant protocols and implementations for actual behavior.' },
   ui: { updated: 'Last updated', language: 'Language', guide: 'GUIDE', explore: 'Explore topics', count: 'topics', topics: 'Topics', navigation: 'Topics', home: 'Home', steps: 'Step by step', flowSteps: 'Flow steps', previous: 'Previous', next: 'Next', detail: 'What happens in this step', loading: 'Loading diagram…', diagramError: 'The diagram could not be loaded. Please refresh and try again.', progress: 'Step {current} of {total}', overview: 'Overview', boundaries: 'Key boundaries', exploreFlow: 'Explore the flow →' }
 };

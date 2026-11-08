@@ -1,4 +1,5 @@
 const topics = [
+  { key: 'aiDistillation', url: 'ai-distillation.html', updated: '2026-11-09', category: 'ai' },
   { key: 'sessionCookie', url: 'session-cookie.html', updated: '2026-11-08', category: 'identity' },
   { key: 'accessSecretToken', url: 'access-secret-token.html', updated: '2026-11-08', category: 'identity' },
   { key: 'sso', url: 'sso.html', updated: '2026-11-08', category: 'identity' },

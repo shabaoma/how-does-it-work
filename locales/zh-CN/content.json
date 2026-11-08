@@ -180,5 +180,15 @@
     "overviewNote": "设备通过 Dropbox 服务传播文件更新；虚线表示离线编辑后重新联网的路径。通知提示客户端查询变更，不代表通知本身包含完整文件。",
     "supplement": "<section class=\"panel supplement\"><h2>设备上的文件范围</h2><ul><li><strong>选择性同步：</strong>每台电脑可选择要同步到本地的文件夹；取消选择不会删除云端文件。</li><li><strong>仅在线：</strong>文件仍显示在电脑的 Dropbox 文件夹中，内容按需下载；离线前需要将所需文件设为可离线使用。</li><li><strong>删除和移动：</strong>同步范围内的删除或移动也会传播；使用选择性同步从本机移除文件夹是另一种操作。</li></ul></section><section class=\"panel supplement\"><h2>同步与冲突边界</h2><p>普通文件的并发编辑可能产生冲突副本，需要比较并手动合并。文件锁定或支持实时协作的应用可以帮助减少冲突，但取决于产品功能和配置。网络中断、客户端未运行、权限或空间不足都可能延迟或阻止同步；检查同步状态后再切换设备。</p><p>资料：<a href=\"https://dropbox.tech/infrastructure/-broccoli--syncing-faster-by-syncing-less\">Dropbox 数据块同步</a> · <a href=\"https://dropbox.tech/infrastructure/streaming-file-synchronization\">Dropbox 同步架构</a> · <a href=\"https://help.dropbox.com/organize/conflicted-copy\">冲突副本</a> · <a href=\"https://help.dropbox.com/sync/selective-sync-overview\">选择性同步</a></p></section>",
     "footer": "本页以普通文件和桌面客户端为例，依据 Dropbox 公开的同步架构与帮助资料；具体实现可能变化。另见 <a href=\"notion-sync.html\">Notion 跨设备同步</a>。"
+  },
+  "aiDistillation": {
+    "title": "AI 模型蒸馏是怎么做的",
+    "heading": "AI 模型蒸馏是怎么做的",
+    "lead": "模型蒸馏让一个学生模型学习教师模型的输出或预测分布。通常希望用较小、运行成本较低的学生模型完成类似任务，但效果和成本需要通过实际评估确认。",
+    "footer": "本页以语言模型为例；蒸馏也可用于分类、图像等任务，具体数据和损失函数因任务而异。",
+    "overviewTitle": "整体流程：从教师到学生",
+    "overview": "flowchart LR\n    D[训练输入] -->|提供问题| T[教师模型]\n    T -->|生成答案或概率| C[训练样本]\n    D -->|输入| C\n    C -->|训练| S[学生模型]\n    E[独立评估集] -->|评估| S\n    S -->|通过评估后部署| A[应用]",
+    "overviewNote": "教师主要在准备数据或训练阶段提供指导；部署后的学生通常独立回答，不需要每次调用教师。",
+    "supplement": "<section class=\"panel supplement\"><h2>方法和边界</h2><ul><li><strong>文本蒸馏：</strong>教师生成答案，学生把答案当作训练目标；只需要教师输出文本，但无法直接学习完整概率分布。</li><li><strong>概率蒸馏：</strong>可取得教师 logits 或概率时，让学生的预测分布接近教师，常用温度和 KL 散度；通常需要兼容的输出空间，且可与真实标签的损失结合。</li><li><strong>成本与效果：</strong>生成数据和训练本身需要算力；较小模型可能更快、更便宜，但也可能损失能力，需在目标硬件上测量。</li><li><strong>质量与权限：</strong>教师可能产生错误或偏见；检查数据质量、隐私、来源和模型服务条款。独立评估不能使用训练样本充当测试集。</li></ul><p>参考：<a href=\"https://arxiv.org/abs/1503.02531\">Distilling the Knowledge in a Neural Network</a></p></section>"
   }
 }
