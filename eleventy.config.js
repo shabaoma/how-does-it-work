@@ -21,6 +21,7 @@ module.exports = function (config) {
   config.addGlobalData('locales', locales);
   config.addGlobalData('defaultLocale', defaultLocale);
   config.addGlobalData('localizedPages', localizedPages);
+  config.addGlobalData('legacyPages', ['index.html', ...topicDefinitions.map(topic => topic.url)].map(url => ({ url, target: `${defaultLocale.prefix}/${url}` }))); 
   config.addFilter('jsonForScript', value => JSON.stringify(value).replace(/</g, '\\u003c'));
   config.addPassthroughCopy('assets');
   config.addPassthroughCopy({ 'node_modules/bootstrap/dist/css/bootstrap-grid.min.css': 'assets/css/bootstrap-grid.min.css' });

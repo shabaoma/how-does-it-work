@@ -22,4 +22,4 @@ npm run serve
 
 ## 部署
 
-运行 `npm ci && npm run build`，将 `dist/` 的内容发布为站点根目录。GitHub Pages 可使用 Actions 上传该目录；CloudFront 可使用私有 S3 源站和 OAC，并将默认根对象设为 `index.html`。中文页面位于站点根目录，英文页面位于 `en/`；语言切换保留当前主题。站内链接采用相对路径，支持项目子路径。Mermaid 当前通过 jsDelivr 加载，访问图表需要浏览器能连接该 CDN。
+运行 `npm ci && npm run build`，将 `dist/` 的内容发布为站点根目录。GitHub Pages 可使用 Actions 上传该目录；CloudFront 可使用私有 S3 源站和 OAC，并将默认根对象设为 `index.html`。中文页面位于 `zh-CN/`，英文页面位于 `en/`；原根目录的中文页面会跳转到对应的新地址，语言切换保留当前主题。站内链接采用相对路径，支持项目子路径。Mermaid 当前通过 jsDelivr 加载，访问图表需要浏览器能连接该 CDN。

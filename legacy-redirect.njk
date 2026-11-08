@@ -1,0 +1,18 @@
+---
+pagination:
+  data: legacyPages
+  size: 1
+  alias: legacyPage
+permalink: "{{ legacyPage.url }}"
+---
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="0; url={{ legacyPage.target }}">
+  <meta name="robots" content="noindex">
+  <title>页面已迁移</title>
+  <script>location.replace({{ legacyPage.target | jsonForScript | safe }} + location.search + location.hash);</script>
+</head>
+<body><p>页面已迁移，请访问<a href="{{ legacyPage.target }}">新地址</a>。</p></body>
+</html>
