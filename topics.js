@@ -7,6 +7,7 @@ const topics = [
   { key: 'emailCode', url: 'email-code.html', category: 'identity' },
   { key: 'codexMcp', url: 'codex-mcp.html', category: 'integration' },
   { key: 'webhook', url: 'webhook.html', category: 'integration' },
+  { key: 'dropboxSync', url: 'dropbox-sync.html', category: 'distributed' },
   { key: 'notionSync', url: 'notion-sync.html', category: 'distributed' },
   { key: 'cacheInvalidation', url: 'cache-invalidation.html', category: 'distributed' },
   { key: 'threeDSecure', url: '3d-secure.html', category: 'payments' },

@@ -1,6 +1,7 @@
 const zhContent = require('./content.json');
 const zhMetadata = require('./topics.js');
 const zhSteps = {
+  dropboxSync: require('./steps/dropbox-sync'),
   notionSync: require('./steps/notion-sync'),
   codexMcp: require('./steps/codex-mcp'),
   sessionCookie: require('./steps/session-cookie'),

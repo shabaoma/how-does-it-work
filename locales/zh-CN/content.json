@@ -160,5 +160,15 @@
     "overviewNote": "设备通过服务交换更新，不直接互传。虚线表示设备 A 离线编辑后重新联网的路径；通知触发设备 B 拉取，而非代表通知本身包含完整页面。",
     "supplement": "<section class=\"panel supplement\"><h2>离线范围与冲突</h2><ul><li><strong>设备范围：</strong>手动下载只在当前设备生效；子页面需要分别下载。桌面和移动应用支持离线页面，浏览器不支持该离线功能。</li><li><strong>数据库：</strong>下载数据库时默认包含第一个视图的前 50 行，其他需要的行须单独下载。</li><li><strong>冲突：</strong>Notion 尝试自动合并文本编辑，但非文本修改仍可能冲突，例如两个离线设备修改同一个单选属性时最终可能只保留一个值。</li><li><strong>可用性：</strong>离线时无法更改分享或权限；依赖网络的嵌入、表单等功能不可用。同步前其他设备看不到离线修改。</li></ul><p>资料：<a href=\"https://www.notion.com/blog/how-we-made-notion-available-offline\">Notion 离线架构</a> · <a href=\"https://www.notion.com/blog/how-notion-handles-concurrent-editing-with-crdts\">并发文本编辑</a> · <a href=\"https://www.notion.com/help/use-pages-offline\">离线使用帮助</a></p></section>",
     "footer": "本页依据 Notion 公开的离线页面架构说明，细节可能随产品演进。另见 <a href=\"cache-invalidation.html\">缓存更新与失效</a>。"
+  },
+  "dropboxSync": {
+    "title": "Dropbox 如何跨设备同步",
+    "heading": "Dropbox 如何跨设备同步",
+    "lead": "Dropbox 桌面客户端把本地文件的变化同步到云端，再让其他设备获取更新。本例以两台电脑同步普通文件为例；离线和并发修改会导致设备暂时看到不同版本。",
+    "overviewTitle": "整体流程：从一台电脑到另一台",
+    "overview": "flowchart LR\n A[电脑 A] -->|上传数据块和文件状态| S[Dropbox 服务]\n S -->|更新通知| B[电脑 B]\n B -->|查询变更并下载数据块| S\n A -.->|重连后同步离线修改| S",
+    "overviewNote": "设备通过 Dropbox 服务传播文件更新；虚线表示离线编辑后重新联网的路径。通知提示客户端查询变更，不代表通知本身包含完整文件。",
+    "supplement": "<section class=\"panel supplement\"><h2>设备上的文件范围</h2><ul><li><strong>选择性同步：</strong>每台电脑可选择要同步到本地的文件夹；取消选择不会删除云端文件。</li><li><strong>仅在线：</strong>文件仍显示在电脑的 Dropbox 文件夹中，内容按需下载；离线前需要将所需文件设为可离线使用。</li><li><strong>删除和移动：</strong>同步范围内的删除或移动也会传播；使用选择性同步从本机移除文件夹是另一种操作。</li></ul></section><section class=\"panel supplement\"><h2>同步与冲突边界</h2><p>普通文件的并发编辑可能产生冲突副本，需要比较并手动合并。文件锁定或支持实时协作的应用可以帮助减少冲突，但取决于产品功能和配置。网络中断、客户端未运行、权限或空间不足都可能延迟或阻止同步；检查同步状态后再切换设备。</p><p>资料：<a href=\"https://dropbox.tech/infrastructure/-broccoli--syncing-faster-by-syncing-less\">Dropbox 数据块同步</a> · <a href=\"https://dropbox.tech/infrastructure/streaming-file-synchronization\">Dropbox 同步架构</a> · <a href=\"https://help.dropbox.com/organize/conflicted-copy\">冲突副本</a> · <a href=\"https://help.dropbox.com/sync/selective-sync-overview\">选择性同步</a></p></section>",
+    "footer": "本页以普通文件和桌面客户端为例，依据 Dropbox 公开的同步架构与帮助资料；具体实现可能变化。另见 <a href=\"notion-sync.html\">Notion 跨设备同步</a>。"
   }
 }
