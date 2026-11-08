@@ -89,9 +89,11 @@ li { margin: 8px 0; }
   .sidebar-mobile { display: block; }
   .page-content > header { padding-top: 20px; }
 }
-.language-switch { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 14px; }
-.language-switch a { color: var(--blue); }
-.language-switch [aria-current] { color: var(--muted); }
+.language-switch { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 4px; margin-bottom: 12px; font-size: 14px; }
+.language-switch a, .language-switch [aria-current] { padding: 5px 10px; border-radius: 999px; }
+.language-switch a { color: var(--muted); }
+.language-switch a:hover { color: var(--accent); background: var(--accent-soft); }
+.language-switch [aria-current] { color: #fff; background: var(--accent); font-weight: 700; }
 
 /* Shared reading and interaction refinements */
 .site-layout { max-width: 1354px; }

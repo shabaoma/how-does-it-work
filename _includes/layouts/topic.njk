@@ -42,7 +42,7 @@
     </aside>
     <div class="page-content">
       <header>
-        <div class="language-switch" aria-label="{{ locale.ui.language }}">
+        <nav class="language-switch" aria-label="{{ locale.ui.language }}">
           {% for language in locales | reverse %}
             {% set available = currentUrl == 'index.html' %}
             {% for item in language.topics %}{% if item.url == currentUrl %}{% set available = true %}{% endif %}{% endfor %}
@@ -50,7 +50,7 @@
               {% if language.code == locale.code %}<span aria-current="true" lang="{{ language.code }}">{{ language.name }}</span>{% else %}<a href="{{ assetPrefix }}{{ (language.prefix + '/') if language.prefix else '' }}{{ currentUrl }}" lang="{{ language.code }}">{{ language.name }}</a>{% endif %}
             {% endif %}
           {% endfor %}
-        </div>
+        </nav>
         <h1>{{ heading }}</h1>
         <p class="lead">{{ lead | safe }}</p>
         <p class="updated">{{ locale.ui.updated }}: <time datetime="{{ localizedPage.updated }}">{{ localizedPage.updated }}</time></p>
