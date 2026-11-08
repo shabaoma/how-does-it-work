@@ -1,4 +1,48 @@
 {
+  "cacheInvalidation": {
+    "title": "缓存更新与失效",
+    "heading": "缓存更新与失效",
+    "lead": "应用用缓存减少重复读取数据库，但数据库更新后，缓存中的副本可能过期。本页以 Cache-Aside（旁路缓存）为例：读取时按需回填，写入时先提交数据库再删除缓存；并发和失败仍可能产生旧数据。",
+    "footer": "本页以应用管理共享缓存、读取主数据库为例；具体一致性取决于存储、并发控制和失败恢复。可靠事件通知可参考 <a href=\"webhook.html\">Webhook 事件通知</a>。",
+    "overviewKicker": "CACHE ASIDE",
+    "overviewTitle": "整体流程：读取与失效",
+    "overview": "flowchart LR\n    R[读请求实例] -->|查询| C[(缓存)]\n    R -.->|未命中时读取| D[(主数据库)]\n    R -.->|未命中时回填| C\n    W[写请求实例] -->|先提交新值| D\n    W -->|提交后删除键| C",
+    "overviewNote": "读写实例代表应用中可并发执行的请求。虚线表示缓存未命中时才从数据库加载并回填；写入和缓存删除之间存在窗口。",
+    "supplement": "<section class=\"panel supplement\"><h2>三种常见的缓存更新方式</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">方式</th><th scope=\"col\">写入后如何处理缓存</th><th scope=\"col\">需要考虑</th></tr></thead><tbody><tr><th scope=\"row\">写后失效</th><td>先提交数据库，再删除受影响的缓存；下次读取时加载。</td><td>实现较直接，但删除失败、并发回填或副本延迟仍可能产生旧值。</td></tr><tr><th scope=\"row\">写时更新</th><td>写入数据源的同时协调更新缓存，例如写穿（write-through）。</td><td>可能减少冷缓存，但跨系统失败与并发写入仍需协调，不能天然保证强一致。</td></tr><tr><th scope=\"row\">依赖过期</th><td>不主动传播每次更新，等待缓存条目的有效期结束后再加载。</td><td>实现简单但可能长期返回旧值；回填时机或滑动过期会影响实际旧数据持续时间。</td></tr></tbody></table></div><p class=\"callout\">方式可以组合使用；先明确业务能容忍多久的旧数据，再选择机制并验证实际保证。</p></section><section class=\"panel supplement\"><h2>并发与失败的关键边界</h2><ul><li><strong>竞争窗口：</strong>旧读取可能在写入和删除完成后回填旧值。可设计持久版本栅栏、原子条件回填或覆盖全部访问路径的协调机制；仅在缓存键存在时比较版本，不能阻止已删除键被旧值重新创建。</li><li><strong>失效可靠性：</strong>数据库提交后删除可能失败。可使用事务性发件箱配合可靠投递、变更数据捕获、重试和告警补偿，但消息延迟、重复或重排仍需处理。</li><li><strong>有效期：</strong>固定 TTL 限制的是某次缓存写入后的存活时间；慢读回填、重复写入或滑动过期可能延长从数据库更新开始的不一致时间。不要把 TTL 当作无条件的强一致保证。</li><li><strong>读取来源与缓存范围：</strong>副本延迟、多级本地缓存和其他写入数据库的服务都可能绕过该失效路径；需要覆盖所有相关缓存键和写入方。</li><li><strong>流量与故障：</strong>热点键同时失效可能引发大量回源，可采用请求合并或合理的限流。缓存故障时回源要考虑数据库容量；关键读取若要求强一致，应使用可提供所需一致性的数据路径。</li></ul><p>参考：<a href=\"https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside\">Microsoft Cache-Aside 模式</a> · <a href=\"https://redis.io/docs/latest/develop/use-cases/cache-aside/\">Redis Cache-Aside</a></p></section>"
+  },
+  "paymentIdempotency": {
+    "title": "支付幂等：安全重试支付请求",
+    "heading": "支付幂等：安全重试支付请求",
+    "lead": "支付请求超时后，商户可能不知道支付服务商是否已经执行操作。幂等键让支持该能力的接口识别同一操作的重复请求，减少重复扣款风险；商户仍需处理状态未知、键过期和业务对账。",
+    "footer": "本页以支付服务商支持幂等键且首次支付成功、响应丢失为例。继续了解 <a href=\"webhook.html\">Webhook 事件通知</a> 和 <a href=\"3d-secure.html\">3D Secure 认证</a>。",
+    "overviewKicker": "PAYMENT RETRY",
+    "overviewTitle": "整体流程：用同一个键重试",
+    "overview": "flowchart LR\n    U[用户] -->|确认支付| M[商户服务]\n    M -->|支付请求和键 K| P[支付服务商]\n    P -->|保存操作状态| D[(幂等记录)]\n    P -.->|响应丢失时商户超时| M\n    M -.->|按规则重试相同请求和 K| P\n    P -->|查找已记录结果| D\n    P -->|返回支付结果| M",
+    "overviewNote": "实线展示正常请求、记录和结果；虚线展示本例中响应丢失后的条件路径。支付服务商对重复请求的具体处理取决于其接口。",
+    "supplement": "<section class=\"panel supplement\"><h2>哪些请求使用同一个键</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">情形</th><th scope=\"col\">键与参数</th><th scope=\"col\">要点</th></tr></thead><tbody><tr><th scope=\"row\">超时后重试同一操作</th><td>在服务商允许的期限内复用原键及相同参数。</td><td>先检查接口支持及重试规则；超时不等于失败。</td></tr><tr><th scope=\"row\">同键但金额等参数不同</th><td>不要复用；服务商可能拒绝不一致的请求。</td><td>参数变化可能表示不同操作，先核实原支付状态。</td></tr><tr><th scope=\"row\">新支付操作或退款</th><td>使用新的操作标识和新键；同一新操作的重试再复用其键。</td><td>先确认是否允许发起新操作，避免把未知状态误当失败。</td></tr></tbody></table></div><p class=\"callout\">幂等键标识的是一次业务操作，而不是订单号的通用替代品；同一订单可能有多次独立操作。</p></section><section class=\"panel supplement\"><h2>实现时的关键边界</h2><ul><li><strong>作用域和期限：</strong>确认服务商的接口支持、键的作用域、保存期限及错误响应规则。过期后旧键可能不再去重；不同供应商的行为并不相同。</li><li><strong>并发与持久化：</strong>商户在首次发送前可靠保存操作与键，多实例并发时用唯一约束或等效方式协调；服务商也需要原子识别重复请求。处理中、冲突或参数不匹配应按其接口处理。</li><li><strong>跨系统的不确定性：</strong>本地去重不保证下游资金操作与本地记录原子完成。保留原支付标识，查询状态、处理可信通知并对账；必要时人工排查。</li><li><strong>业务状态：</strong>API 返回的结果应按实际支付状态处理，不能把请求被接收直接等同于最终结算。支付、捕获、退款等各自有独立操作和状态。</li><li><strong>安全与重试：</strong>生成足够唯一的随机键，避免包含敏感信息；使用有界退避和监控，并遵循服务商关于可重试错误和间隔的规定。</li></ul><p>参考：<a href=\"https://docs.stripe.com/api/idempotent_requests\">Stripe 幂等请求</a> · <a href=\"https://developer.paypal.com/api/rest/requests/\">PayPal API 请求</a></p></section>"
+  },
+  "webhook": {
+    "title": "Webhook 事件通知",
+    "heading": "Webhook 事件通知",
+    "lead": "当一个服务中的事件发生后，Webhook 让事件提供方向接收方配置的地址发送 HTTP 通知。接收方验证并保存事件，再异步处理；投递成功不等于业务处理成功，重试和消息格式也由提供方决定。",
+    "footer": "本页以 HTTPS POST 和共享密钥签名为例；具体验证与重投规则以事件提供方文档为准。继续了解 <a href=\"payment-idempotency.html\">支付幂等</a> 和 <a href=\"3d-secure.html\">3D Secure</a>。",
+    "overviewKicker": "EVENT DELIVERY",
+    "overviewTitle": "整体流程：事件如何送达并处理",
+    "overview": "flowchart LR\n    P[事件提供方] -->|POST 事件及签名| E[接收端点]\n    E -->|验证后保存事件| Q[(可靠存储)]\n    E -->|成功响应| P\n    W[后台处理器] -->|读取与更新状态| Q\n    P -.->|按策略自动重试或手动重投| E",
+    "overviewNote": "实线展示事件可靠接收和后台处理；虚线表示投递失败后，提供方支持自动重试或接入方发起重投时的可选路径。",
+    "supplement": "<section class=\"panel supplement\"><h2>接收、处理和重试是不同状态</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">状态</th><th scope=\"col\">由谁负责</th><th scope=\"col\">失败后怎么办</th></tr></thead><tbody><tr><th scope=\"row\">HTTP 投递</th><td>提供方发送通知，接收端返回响应。</td><td>按提供方能力自动重试、手动重投或对账；并非所有提供方都会自动重试。</td></tr><tr><th scope=\"row\">可靠接收</th><td>接收端验证消息，并持久化事件和待处理状态。</td><td>保存失败不应确认成功；已保存但响应丢失时，重投可能产生重复。</td></tr><tr><th scope=\"row\">业务处理</th><td>接收方的后台处理器执行操作并记录结果。</td><td>由接收方重试、告警或人工恢复；HTTP 已成功不能保证这一步成功。</td></tr></tbody></table></div><p class=\"callout\">事件标识如何用于去重由提供方定义；若不同事件可能触发同一业务操作，还需以业务标识保护副作用。</p></section><section class=\"panel supplement\"><h2>接入时的关键边界</h2><ul><li><strong>验证来源与完整性：</strong>使用 HTTPS，按提供方规定验证签名并安全保存密钥；支持签名时间戳时，也按其规则检查时间窗口。签名验证不能代替业务授权和字段校验。</li><li><strong>重复与并发：</strong>使用提供方定义的事件标识及适当作用域做原子去重；将待处理记录可靠保存，与后续业务幂等共同设计，避免并发和崩溃造成重复或丢失。</li><li><strong>乱序与缺失：</strong>不要假定投递顺序与事件发生顺序一致。根据业务版本或状态转换规则处理旧事件，必要时通过提供方 API 查询当前状态并对账。</li><li><strong>运行与恢复：</strong>限制请求体大小、记录安全日志并监控投递和处理失败；不要在日志中泄露签名密钥或敏感数据。明确补投、重试耗尽和人工恢复流程。</li></ul><p>参考：<a href=\"https://docs.github.com/en/webhooks/using-webhooks/best-practices-for-using-webhooks\">GitHub Webhook 最佳实践</a> · <a href=\"https://docs.github.com/en/webhooks/using-webhooks/handling-failed-webhook-deliveries\">GitHub 失败投递处理</a></p></section>"
+  },
+  "oidcLogin": {
+    "title": "OpenID Connect 登录",
+    "heading": "OpenID Connect 登录",
+    "lead": "OpenID Connect（OIDC）在 OAuth 2.0 授权流程上增加身份认证。用户通过身份提供方认证后，应用验证 ID Token 中的身份信息，再建立自己的登录会话。下面以使用 PKCE 的服务端应用为例。",
+    "footer": "本页展示 OIDC 授权码登录的常见过程。继续了解 <a href=\"oauth-pkce.html\">OAuth 2.0 与 PKCE</a>、<a href=\"sso.html\">单点登录与退出</a> 和 <a href=\"session-cookie.html\">Session Cookie</a>。",
+    "overviewKicker": "OIDC LOGIN",
+    "overviewTitle": "整体流程：应用如何确认用户身份",
+    "overview": "flowchart LR\n    U[用户] -->|选择登录| B[浏览器]\n    B -->|访问和回调| C[应用]\n    B -->|认证用户| I[身份提供方]\n    C -->|授权码和校验值| I\n    I -->|ID Token 和访问令牌| C\n    C -->|建立应用会话| B",
+    "overviewNote": "浏览器负责跳转，应用通过令牌端点获取并验证身份信息，然后建立自己的会话。",
+    "supplement": "<section class=\"panel supplement\"><h2>两种令牌各做什么</h2><div class=\"table-scroll\"><table><thead><tr><th>令牌</th><th>接收方和用途</th><th>关键边界</th></tr></thead><tbody><tr><th>ID Token</th><td>发给应用，传达身份提供方的认证结果和用户标识。</td><td>应用验证签名和声明；不能作为访问 API 的访问令牌。</td></tr><tr><th>访问令牌</th><td>客户端向受保护资源或 UserInfo 端点出示。</td><td>资源服务器检查令牌和权限；不能直接当作应用的登录身份证明。</td></tr></tbody></table></div><p class=\"callout\">如需额外用户资料，应用可按授权调用 UserInfo；返回的 <code>sub</code> 必须与已验证 ID Token 的 <code>sub</code> 一致后才能使用。</p></section><section class=\"panel supplement\"><h2>认证与会话的关键边界</h2><ul><li><strong>OIDC 与 OAuth：</strong>OAuth 主要解决授权；OIDC 使用 <code>openid</code> 范围和 ID Token 在其上提供身份认证。</li><li><strong>可信配置：</strong>从可信签发方获取配置和密钥；核对预期的签发方、受众、算法和令牌有效期，并验证本例发送的 <code>nonce</code>。</li><li><strong>身份标识：</strong>使用 <code>iss</code> 与 <code>sub</code> 的组合识别用户；邮箱等资料可能变化，不应作为跨提供方的稳定身份标识。</li><li><strong>退出范围：</strong>结束应用会话不一定结束身份提供方或其他应用的会话。退出传播依赖提供方及应用的支持和配置。</li></ul><p>参考：<a href=\"https://openid.net/specs/openid-connect-core-1_0.html\">OpenID Connect Core</a> · <a href=\"https://www.rfc-editor.org/rfc/rfc9700.html\">OAuth 2.0 安全最佳实践</a></p></section>"
+  },
   "oauthPkce": {
     "title": "OAuth 2.0 授权码与 PKCE",
     "heading": "OAuth 2.0 授权码与 PKCE",
@@ -36,7 +80,7 @@
     "title": "外部 SSO 登录与退出",
     "heading": "外部 SSO 登录与退出",
     "lead": "单点登录（SSO）让应用把身份认证交给外部身份提供方。用户通过浏览器跳转完成认证，应用再建立自己的会话；退出应用和退出身份提供方是不同的操作。下面以 OpenID Connect（OIDC）授权码流程和服务端应用为例。",
-    "footer": "本页以 OIDC 服务端应用为例；具体参数和退出能力取决于身份提供方。继续了解 <a href=\"oauth-pkce.html\">OAuth 2.0 与 PKCE</a> 和 <a href=\"session-cookie.html\">Session Cookie</a>。",
+    "footer": "本页以 OIDC 服务端应用为例；具体参数和退出能力取决于身份提供方。继续了解 <a href=\"oidc-login.html\">OIDC 登录</a>、<a href=\"oauth-pkce.html\">OAuth 2.0 与 PKCE</a> 和 <a href=\"session-cookie.html\">Session Cookie</a>。",
     "overviewKicker": "OVERVIEW",
     "overviewTitle": "整体流程：应用与外部身份提供方协作",
     "overview": "flowchart LR\n    U[用户] -->|操作| B[浏览器]\n    B -->|访问和回调| A[应用]\n    B -->|认证和可选退出| I[身份提供方]\n    A -->|交换授权码| I\n    I -.->|可选：退出通知| A",

@@ -1,4 +1,8 @@
 module.exports = {
+  cacheInvalidation: { label: '缓存更新与失效', title: '缓存更新与失效', description: '了解 Cache-Aside 的读写流程、并发竞争和旧数据边界。' },
+  paymentIdempotency: { label: '支付幂等', title: '支付幂等：安全重试支付请求', description: '了解支付请求超时后如何安全重试并确认结果。' },
+  webhook: { label: 'Webhook 事件通知', title: 'Webhook 事件通知', description: '了解服务如何投递、验证和处理异步事件通知。' },
+  oidcLogin: { label: 'OpenID Connect', title: 'OpenID Connect 登录', description: '了解应用如何验证身份提供方的认证结果并建立会话。' },
   oauthPkce: { label: 'OAuth 2.0 与 PKCE', title: 'OAuth 2.0 授权码与 PKCE', description: '了解应用如何取得授权，以及 PKCE 如何绑定授权码。' },
   sso: { label: '外部 SSO 登录与退出', title: '外部 SSO 登录与退出', description: '以 OpenID Connect 为例，了解单点登录、应用会话和退出传播。' },
   sessionCookie: { label: 'Session Cookie', title: 'Session Cookie 登录', description: '浏览器如何保存会话标识，以及服务器如何恢复登录状态。' },

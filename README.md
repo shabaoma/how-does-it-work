@@ -10,11 +10,21 @@ This site uses diagrams and step-by-step explanations to make familiar technolog
 - Access tokens and secret tokens
 - Single sign-on: login and logout
 - OAuth 2.0 authorization code and PKCE
+- OpenID Connect login
 - Email verification code login
+
+**Service integration**
+
+- Webhook event notifications
+
+**Distributed systems**
+
+- Cache updates and invalidation
 
 **Payments**
 
 - 3D Secure payment authentication
+- Payment idempotency
 
 **Cloud services**
 
