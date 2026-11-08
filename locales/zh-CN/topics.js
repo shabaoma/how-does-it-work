@@ -1,4 +1,5 @@
 module.exports = {
+  isuconAgents: { label: 'ISUCON 多 Agent', title: '一个人如何用多 Agent 参加 ISUCON', description: '了解自主优化中的角色分工、实验反馈和停止决策。' },
   aiDistillation: { label: '模型蒸馏', title: 'AI 模型蒸馏是怎么做的', description: '了解学生模型如何向教师模型学习。' },
   socialNetwork: { label: '社交网络', title: '社交网络如何运作与设计', description: '了解关注、发布、信息流和互动的设计。' },
   dropboxSync: { label: 'Dropbox 跨设备同步', title: 'Dropbox 如何跨设备同步', description: '了解文件变更、数据块传输与冲突处理。' },

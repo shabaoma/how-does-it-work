@@ -1,4 +1,5 @@
 module.exports = {
+  isuconAgents: { label: 'ISUCON and agents', title: 'How agents optimized an ISUCON entry', description: 'Follow the roles, experiments and stopping decision in an autonomous competition workflow.' },
   aiDistillation: { label: 'Model distillation', title: 'How AI model distillation works', description: 'See how a student model learns from a teacher model.' },
   socialNetwork: { label: 'Social networks', title: 'How to design a social network', description: 'Explore follows, posts, feeds, and interactions.' },
   dropboxSync: { label: 'Dropbox device sync', title: 'How Dropbox syncs across devices', description: 'Follow file changes, block transfers, and conflicts.' },
