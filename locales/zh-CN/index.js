@@ -1,6 +1,7 @@
 const zhContent = require('./content.json');
 const zhMetadata = require('./topics.js');
 const zhSteps = { sessionCookie: require('./steps/session-cookie'), accessSecretToken: require('./steps/access-secret-token'), sso: require('./steps/sso'), emailCode: require('./steps/email-code'), threeDSecure: require('./steps/3d-secure'), awsSts: require('./steps/aws-sts'), awsIam: require('./steps/aws-iam') };
+zhSteps.oauthPkce = require('./steps/oauth-pkce');
 const zhTopics = Object.fromEntries(Object.keys(zhMetadata).map(key => [key, { ...zhContent[key], ...zhMetadata[key], pageTitle: zhContent[key].title, ...zhSteps[key] }]));
 const zh = {
   code: 'zh-CN', prefix: 'zh-CN', name: '简体中文', topics: zhTopics,

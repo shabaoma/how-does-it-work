@@ -1,4 +1,5 @@
 module.exports = {
+  oauthPkce: { label: 'OAuth 2.0 and PKCE', title: 'OAuth 2.0 authorization code and PKCE', description: 'How an application obtains authorization and PKCE binds the authorization code.' },
   "sessionCookie": {
     "label": "Session Cookie",
     "title": "Session cookie login",

@@ -4,6 +4,7 @@ const steps = {
   sessionCookie: require('./steps/session-cookie'),
   accessSecretToken: require('./steps/access-secret-token'),
   sso: require('./steps/sso'),
+  oauthPkce: require('./steps/oauth-pkce'),
   emailCode: require('./steps/email-code'),
   threeDSecure: require('./steps/3d-secure'),
   awsSts: require('./steps/aws-sts'),

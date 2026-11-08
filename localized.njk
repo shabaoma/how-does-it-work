@@ -10,7 +10,7 @@ eleventyComputed:
   heading: "{{ localizedPage.topic.heading or localizedPage.topic.title or localizedPage.locale.home.title }}"
   lead: "{{ localizedPage.topic.lead or localizedPage.locale.home.lead }}"
   description: "{{ localizedPage.topic.description or localizedPage.locale.home.description }}"
-  footer: "{{ localizedPage.topic.footer or localizedPage.locale.home.footer }}"
+  footer: "{{ (localizedPage.topic.footer or localizedPage.locale.home.footer) | safe }}"
 ---
 {% set locale = localizedPage.locale %}
 {% set localizedTopic = localizedPage.topic %}

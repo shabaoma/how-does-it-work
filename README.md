@@ -9,6 +9,7 @@ This site uses diagrams and step-by-step explanations to make familiar technolog
 - Session cookie login
 - Access tokens and secret tokens
 - Single sign-on: login and logout
+- OAuth 2.0 authorization code and PKCE
 - Email verification code login
 
 **Payments**

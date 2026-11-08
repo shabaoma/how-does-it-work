@@ -1,4 +1,15 @@
 {
+  "oauthPkce": {
+    "title": "OAuth 2.0 授权码与 PKCE",
+    "heading": "OAuth 2.0 授权码与 PKCE",
+    "lead": "用户希望应用访问自己在另一服务中的资源时，OAuth 2.0 让应用通过授权服务器取得访问令牌。下面以服务端客户端和浏览器为例，解释授权码流程，以及授权码交换证明密钥（PKCE）如何将授权码绑定到本次请求。",
+    "footer": "本页以服务端客户端使用 S256 为例；实际端点和权限由提供方定义。继续了解 <a href=\"sso.html\">OIDC 单点登录</a> 和 <a href=\"access-secret-token.html\">访问令牌与刷新令牌</a>。",
+    "overviewKicker": "AUTHORIZATION FLOW",
+    "overviewTitle": "整体流程：从用户授权到访问资源",
+    "overview": "flowchart LR\n    U[用户] -->|操作| B[浏览器]\n    B -->|开始授权和回调| C[客户端应用]\n    B -->|登录和授权| A[授权服务器]\n    C -->|授权码和校验值| A\n    A -->|访问令牌| C\n    C -->|访问令牌及资源请求| R[资源服务器]\n    R -->|受保护资源| C",
+    "overviewNote": "浏览器承载授权请求和回调；客户端在令牌端点交换授权码，再使用访问令牌请求资源。",
+    "supplement": "<section class=\"panel supplement\"><h2>PKCE 如何绑定授权码</h2><p>客户端为每次请求生成随机 <code>code_verifier</code>，并计算 <code>code_challenge = BASE64URL(SHA256(ASCII(code_verifier)))</code>（不带填充）。授权请求只发送 challenge；交换时才通过 HTTPS 发送 verifier。服务器重新计算并比较，防止只截获授权码的一方直接兑换令牌。</p><p class=\"callout\">PKCE 不保护已经泄露的访问令牌，也不替代安全保存 verifier、验证回调或保护客户端环境。</p></section><section class=\"panel supplement\"><h2>授权与身份认证的边界</h2><ul><li><strong>授权范围：</strong><code>scope</code> 表示请求的访问范围；实际授予范围由授权服务器决定，资源服务器仍需检查权限。</li><li><strong>客户端类型：</strong>公开客户端无法可靠保守客户端密钥，必须使用 PKCE；机密客户端也推荐使用 PKCE，并仍须按要求认证。</li><li><strong>回调保护：</strong>本例使用与用户会话绑定的 <code>state</code> 关联回调并防范跨站请求伪造；授权服务器应严格匹配已注册的回调地址。</li><li><strong>身份认证：</strong>OAuth 本身是授权框架，访问令牌不应直接当作客户端的登录身份证明。需要登录时可使用 OIDC 并验证 ID Token。</li></ul><p>参考：<a href=\"https://www.rfc-editor.org/rfc/rfc6749.html\">RFC 6749</a> · <a href=\"https://www.rfc-editor.org/rfc/rfc7636.html\">RFC 7636</a> · <a href=\"https://www.rfc-editor.org/rfc/rfc9700.html\">RFC 9700</a></p></section>"
+  },
   "sessionCookie": {
     "title": "Session Cookie 登录",
     "heading": "Session Cookie 登录",
@@ -25,7 +36,7 @@
     "title": "外部 SSO 登录与退出",
     "heading": "外部 SSO 登录与退出",
     "lead": "单点登录（SSO）让应用把身份认证交给外部身份提供方。用户通过浏览器跳转完成认证，应用再建立自己的会话；退出应用和退出身份提供方是不同的操作。下面以 OpenID Connect（OIDC）授权码流程和服务端应用为例。",
-    "footer": "本页以 OIDC 服务端应用为例；具体参数和退出能力取决于身份提供方。继续了解 <a href=\"session-cookie.html\">Session Cookie</a>。",
+    "footer": "本页以 OIDC 服务端应用为例；具体参数和退出能力取决于身份提供方。继续了解 <a href=\"oauth-pkce.html\">OAuth 2.0 与 PKCE</a> 和 <a href=\"session-cookie.html\">Session Cookie</a>。",
     "overviewKicker": "OVERVIEW",
     "overviewTitle": "整体流程：应用与外部身份提供方协作",
     "overview": "flowchart LR\n    U[用户] -->|操作| B[浏览器]\n    B -->|访问和回调| A[应用]\n    B -->|认证和可选退出| I[身份提供方]\n    A -->|交换授权码| I\n    I -.->|可选：退出通知| A",

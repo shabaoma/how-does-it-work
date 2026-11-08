@@ -1,4 +1,5 @@
 module.exports = {
+  oauthPkce: { label: 'OAuth 2.0 与 PKCE', title: 'OAuth 2.0 授权码与 PKCE', description: '了解应用如何取得授权，以及 PKCE 如何绑定授权码。' },
   sso: { label: '外部 SSO 登录与退出', title: '外部 SSO 登录与退出', description: '以 OpenID Connect 为例，了解单点登录、应用会话和退出传播。' },
   sessionCookie: { label: 'Session Cookie', title: 'Session Cookie 登录', description: '浏览器如何保存会话标识，以及服务器如何恢复登录状态。' },
   accessSecretToken: { label: 'Access / Secret', title: 'Access token 与 Secret token', description: '了解访问令牌与秘密令牌如何参与身份验证，以及各自需要保护的边界。' },
