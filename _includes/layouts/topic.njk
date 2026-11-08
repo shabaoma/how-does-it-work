@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title }}</title>
   {% if description %}<meta name="description" content="{{ description }}">{% endif %}
+  <link rel="stylesheet" href="{% if english %}../{% endif %}assets/css/bootstrap-grid.min.css">
   <link rel="stylesheet" href="{% if english %}../{% endif %}assets/css/site.css">
   {% if topicScript or englishTopic %}
   <script defer src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
