@@ -1,0 +1,13 @@
+---
+permalink: sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% for localizedPage in localizedPages %}
+  <url>
+    <loc>https://shabaoma.github.io/how-does-it-work/{{ localizedPage.url | escape }}</loc>
+    <lastmod>{{ localizedPage.updated }}</lastmod>
+  </url>
+{% endfor %}
+</urlset>

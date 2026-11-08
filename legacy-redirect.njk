@@ -9,6 +9,7 @@ permalink: "{{ legacyPage.url }}"
 <html lang="{{ legacyPage.lang }}">
 <head>
   <meta charset="utf-8">
+  {% if legacyPage.url == 'index.html' %}<meta name="google-site-verification" content="WNZPcnzo-j4Z1MqM-Fl12Q0Bx22BrU_TfOUVIWO-QkU">{% endif %}
   <meta http-equiv="refresh" content="0; url={{ legacyPage.target }}">
   <meta name="robots" content="noindex">
   <title>{% if legacyPage.lang == 'en' %}Page moved{% else %}页面已迁移{% endif %}</title>
