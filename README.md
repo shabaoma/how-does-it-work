@@ -12,6 +12,10 @@ npm run serve
 
 ## Topics
 
+**Artificial intelligence**
+
+- AI model distillation
+
 **Identity and sign-in**
 
 - Session cookie login
