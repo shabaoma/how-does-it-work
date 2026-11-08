@@ -1,7 +1,7 @@
 const step = (label, title, detail, note, diagram) => ({ label, title, detail, note, kicker: 'STEP', diagram: `sequenceDiagram\n${diagram}` });
-module.exports = [
-  {
-    url: 'session-cookie.html', label: 'Session Cookie', category: 'Identity and login', title: 'Session cookie login',
+module.exports = {
+  sessionCookie: {
+    label: 'Session Cookie', title: 'Session cookie login',
     description: 'How a browser stores a session identifier and a server restores login state.',
     lead: 'The server stores login state and sends an opaque session identifier in Set-Cookie. The browser sends the cookie on matching requests, allowing the server to find the session.',
     overview: 'flowchart LR\n B[Browser] -->|Credentials| S[Server]\n S -->|Save session| D[(Session store)]\n S -->|Set-Cookie| B\n B -->|Later request with cookie| S\n S -->|Look up session| D\n S -->|Response| B',
@@ -15,8 +15,8 @@ module.exports = [
     extra: 'The session store holds login state; the cookie carries its identifier. HttpOnly prevents page scripts from reading the cookie, Secure limits transmission to HTTPS, and SameSite mitigates some cross-site request forgery scenarios.',
     footer: 'This illustrates a common browser session cookie flow; behavior depends on the application.'
   },
-  {
-    url: 'access-secret-token.html', label: 'Access / Secret', category: 'Identity and login', title: 'Access tokens and secret tokens',
+  accessSecretToken: {
+    label: 'Access / Secret', title: 'Access tokens and secret tokens',
     description: 'How access and refresh tokens support authentication and where each must be protected.',
     lead: 'After authentication, a client may receive an access token for API calls and a longer-lived secret token for obtaining a new access token. In OAuth, the latter is usually called a refresh token.',
     overview: 'flowchart LR\n C[Client] -->|Login credentials| A[Authentication server]\n A -->|Access and refresh tokens| C\n C -->|Access token| B[Business server]\n B -->|Response| C\n C -.->|Refresh token when needed| A',
@@ -30,8 +30,8 @@ module.exports = [
     extra: 'An access token is sent to the resource server, often in Authorization: Bearer. A refresh token is sent to the authentication server. A client secret identifies a confidential application and is a different credential.',
     footer: 'This is a general token login flow. Actual issuance, validation, and revocation depend on the system.'
   },
-  {
-    url: 'email-code.html', label: 'Email code', category: 'Identity and login', title: 'Email verification code login',
+  emailCode: {
+    label: 'Email code', title: 'Email verification code login',
     description: 'Follow a one-time email code from delivery to a signed-in session.',
     lead: 'A user submits an email address and receives a one-time code. The server verifies the code and establishes a login session; possession of the code demonstrates current access to the mailbox.',
     overview: 'flowchart LR\n U[User] -->|Email and code| B[Browser or app]\n B -->|HTTPS requests| A[Authentication service]\n A -->|Store and verify code| R[(Code store)]\n A -->|Send email| M[Email provider]\n M -->|Deliver code| E[Mailbox]\n E -->|User reads code| U\n A -->|Create session| S[(Session store)]\n A -->|Session cookie| B',
@@ -45,8 +45,8 @@ module.exports = [
     extra: 'Use cryptographically secure random codes, short expirations, one-time consumption, and rate limits. Protect stored verification values, avoid account enumeration, and use HTTPS. Email codes depend on mailbox security and are not phishing-resistant multifactor authentication.',
     footer: 'This example uses a session cookie; other systems may issue tokens.'
   },
-  {
-    url: '3d-secure.html', label: '3D Secure', category: 'Payments', title: '3D Secure payment authentication',
+  threeDSecure: {
+    label: '3D Secure', title: '3D Secure payment authentication',
     description: 'The participants and flow of cardholder authentication for online payments.',
     lead: '3D Secure (3DS) lets a merchant request cardholder authentication through the card network and issuing bank. The issuer assesses risk and may require a challenge. Payment authorization is a separate step.',
     overview: 'flowchart LR\n U[Cardholder] -->|Submit payment| M[Merchant or payment provider]\n M -->|3DS request| D[Directory server]\n D -->|Authentication request| A[Issuer authentication system]\n A -.->|Challenge when needed| U\n A -->|Authentication result| D\n D -->|Authentication result| M\n M -->|Payment authorization| P[Payment network]\n P -->|Authorization request| I[Issuer]',
@@ -60,8 +60,8 @@ module.exports = [
     extra: 'Frictionless and challenge are possible authentication paths, not guarantees of success. Liability shift depends on network rules and transaction outcomes. 3DS does not prevent a user from being tricked into approving a fraudulent transaction.',
     footer: 'This is a common 3DS flow; follow the applicable payment provider and card network requirements.'
   },
-  {
-    url: 'aws-sts.html', label: 'AWS STS', category: 'Cloud services', title: 'How AWS STS works',
+  awsSts: {
+    label: 'AWS STS', title: 'How AWS STS works',
     description: 'Learn about temporary credentials and permissions using cross-account AssumeRole.',
     lead: 'AWS Security Token Service (STS) issues temporary credentials for an IAM role. This example uses cross-account AssumeRole: permission to assume a role and permission to access a resource are separate checks.',
     overview: 'flowchart LR\n C[Caller] -->|AssumeRole| S[STS]\n S -->|Check trust and permissions| I[IAM policies]\n S -->|Temporary credentials| C\n C -->|Signed request and session token| R[AWS resource service]\n R -->|Authorized response| C',
@@ -75,4 +75,4 @@ module.exports = [
     extra: 'Session policies can restrict role permissions but do not expand the role’s identity-based permissions. AssumeRoleWithWebIdentity and AssumeRoleWithSAML use different federation inputs. Explicit denies and other applicable policy limits still apply.',
     footer: 'This example covers programmatic cross-account AssumeRole; other STS operations have different requirements.'
   }
-];
+};

@@ -1,11 +1,12 @@
 ---
 layout: layouts/topic.njk
 permalink: index.html
-title: 技术原理图解
-heading: 技术原理图解
-description: 通过流程图和分步讲解，了解技术如何工作。
-lead: 从参与方、数据流和关键边界出发，用流程图和分步讲解理解常见技术。
-footer: 页面展示常见流程；具体行为以相关协议和实际实现为准。
+eleventyComputed:
+  title: "{{ defaultLocale.home.title }}"
+  heading: "{{ defaultLocale.home.title }}"
+  description: "{{ defaultLocale.home.description }}"
+  lead: "{{ defaultLocale.home.lead }}"
+  footer: "{{ defaultLocale.home.footer }}"
 ---
 <main>
   {% for category, entries in topics | groupby('category') %}
