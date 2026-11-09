@@ -44,6 +44,7 @@ npm run serve
 
 - AWS STS temporary credentials
 - AWS IAM permissions
+- Cognito identity pools and identity IDs
 
 Choose a topic from the home page, or use the topic navigation to move between pages.
 
