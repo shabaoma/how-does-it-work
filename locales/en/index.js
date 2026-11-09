@@ -1,6 +1,7 @@
 const content = require('./content.json');
 const metadata = require('./topics');
 const steps = {
+  cognitoIdentityPool: require('./steps/cognito-identity-pool'),
   cachePenetration: require('./steps/cache-penetration'),
   isuconAgents: require('./steps/isucon-multi-agent'),
   aiDistillation: require('./steps/ai-distillation'),

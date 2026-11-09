@@ -210,5 +210,15 @@
     "overview": "flowchart LR\n    U[客户端] -->|查询商品| A[应用]\n    A -->|查询键| C[缓存]\n    C -.->|未命中| A\n    A -->|查询记录| D[(数据库)]\n    D -->|记录或不存在| A\n    A -.->|按策略缓存结果| C\n    A -->|返回结果| U",
     "overviewNote": "虚线表示条件路径：缓存未命中时才查询数据库；是否回填空值取决于策略。缓存正常命中和穿透都可能从未命中开始，但穿透的关键是不存在的记录反复落到数据库。",
     "supplement": "<section class=\"panel supplement\"><h2>防护方法与边界</h2><ul><li><strong>空值缓存：</strong>只在权威数据源确认不存在后写入明确的空值标记，设置较短的生存时间（TTL）；数据库超时或错误不能当作不存在。大量不同的不存在键仍会消耗缓存空间并首次访问数据库。</li><li><strong>布隆过滤器：</strong>在查询前判断键是否可能存在；可能误报存在，所以仍要查缓存或数据库。只有过滤器完整且与数据更新正确同步时，判定不存在才能安全拦截。新增记录前应先让过滤器包含该键，重建或异常期间应有回退策略。</li><li><strong>输入校验与限流：</strong>拒绝格式无效的键并限制请求速率；合法格式但不存在的键仍可能穿透，需要结合其他措施。</li><li><strong>新增与过期：</strong>创建原本不存在的记录后应删除或更新对应空值标记；删除失败、并发回填或复制延迟仍可能导致短暂误报不存在，应按业务一致性要求处理。</li></ul><p>缓存击穿通常指热点键过期后并发回源；缓存雪崩通常指大量键同时失效或缓存不可用。它们与缓存穿透的触发条件不同。</p></section>"
+  },
+  "cognitoIdentityPool": {
+    "title": "Cognito Identity ID 与身份池",
+    "heading": "Cognito 身份池如何获取临时 AWS 凭证",
+    "lead": "Amazon Cognito 身份池为已认证用户或允许的访客关联 Identity ID，并根据配置的 IAM 角色提供临时 AWS 凭证。这里以 Cognito 用户池登录后的增强流程为例，说明身份、凭证和权限如何衔接。",
+    "footer": "本页介绍身份池增强流程；角色信任策略、资源策略和组织策略等共同影响实际访问。继续了解 <a href=\"aws-sts.html\">AWS STS 临时凭证</a> 和 <a href=\"aws-iam.html\">IAM 权限</a>。",
+    "overviewTitle": "整体流程：登录身份换取临时凭证",
+    "overview": "flowchart LR\n    U[用户] -->|登录| A[客户端应用]\n    A -->|认证| P[用户池]\n    P -->|ID 令牌| A\n    A -->|令牌和身份池 ID| C[Cognito 身份池]\n    C -->|Identity ID 和临时凭证| A\n    C -->|根据角色配置获取凭证| S[AWS STS]\n    A -->|使用临时凭证签名请求| R[AWS 服务]\n    R -->|按策略检查权限| I[IAM 策略]",
+    "overviewNote": "图中将获取 Identity ID 与获取凭证合并展示；实际增强流程通常分别调用 GetId 和 GetCredentialsForIdentity。身份池也可以配置其他身份提供方，或选择启用访客访问。",
+    "supplement": "<section class=\"panel supplement\"><h2>区分身份、令牌与权限</h2><ul><li><strong>用户池与身份池：</strong>用户池负责用户目录和登录，签发令牌；身份池把受支持的登录身份或访客映射为联合身份，并提供访问 AWS 的临时凭证。两者可以一起使用，也可以分别使用。</li><li><strong>Identity ID：</strong>它是身份池内联合身份的标识，通常形如 <code>region:uuid</code>；它不是密码、登录令牌或 AWS 访问密钥，也不应单独作为服务端认证或授权依据。身份关联或合并时标识可能变化。</li><li><strong>角色和权限：</strong>身份池按认证状态和角色映射配置选择 IAM 角色；角色信任策略需限制身份池与认证状态。临时凭证的有效权限还受角色权限、资源策略及其他适用策略约束。</li><li><strong>访客与生命周期：</strong>只有启用未认证身份时访客才能获取凭证，权限应单独收紧。临时凭证会过期；客户端需按 SDK 流程刷新凭证，必要时先刷新登录令牌。不要把长期密钥放进客户端。</li></ul><p>参考：<a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/identity-pools.html\">Amazon Cognito 身份池</a> · <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/authentication-flow.html\">身份池认证流程</a></p></section>"
   }
 }

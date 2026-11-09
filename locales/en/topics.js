@@ -1,4 +1,5 @@
 module.exports = {
+  cognitoIdentityPool: { label: 'Cognito identity pools', title: 'Cognito identity pools and identity IDs', description: 'Follow an identity from sign-in to temporary AWS credentials.' },
   cachePenetration: { label: 'Cache penetration', title: 'Cache penetration', description: 'Why missing keys repeatedly reach the database and how to reduce the load.' },
   isuconAgents: { label: 'ISUCON and agents', title: 'How agents optimized an ISUCON entry', description: 'Follow the roles, experiments and stopping decision in an autonomous competition workflow.' },
   aiDistillation: { label: 'Model distillation', title: 'How AI model distillation works', description: 'See how a student model learns from a teacher model.' },
