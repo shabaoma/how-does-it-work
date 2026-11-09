@@ -25,11 +25,11 @@ eleventyComputed:
   {% include "parts/steps.njk" %}
   {% if localizedTopic.supplement %}{{ localizedTopic.supplement | safe }}{% else %}<section class="panel supplement"><h2>{{ locale.ui.boundaries }}</h2><p>{{ localizedTopic.extra }}</p></section>{% endif %}
   {% else %}
-  {% for category, entries in locale.topics | groupby('category') %}
+  {% for group in locale.menuGroups %}
   <section class="topic-group" aria-labelledby="category-{{ loop.index }}">
-    <h2 id="category-{{ loop.index }}">{{ category }}</h2>
+    <h2 id="category-{{ loop.index }}">{{ group.category }}</h2>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 topic-grid">
-      {% for topic in entries %}<div class="col"><a class="panel topic-card" href="{{ topic.url }}"><h3>{{ topic.title }}</h3><p>{{ topic.description }}</p><span>{{ locale.ui.exploreFlow }}</span></a></div>{% endfor %}
+      {% for topic in group.topics %}<div class="col"><a class="panel topic-card" href="{{ topic.url }}"><h3>{{ topic.title }}</h3><p>{{ topic.description }}</p><span>{{ locale.ui.exploreFlow }}</span></a></div>{% endfor %}
     </div>
   </section>
   {% endfor %}
