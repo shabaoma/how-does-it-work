@@ -33,6 +33,7 @@ npm run serve
 **Distributed systems**
 
 - Cache updates and invalidation
+- Cache penetration
 
 **Payments**
 

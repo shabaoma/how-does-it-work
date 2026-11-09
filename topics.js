@@ -1,4 +1,5 @@
 const topics = [
+  { key: 'cachePenetration', url: 'cache-penetration.html', updated: '2026-11-09', category: 'distributed' },
   { key: 'isuconAgents', url: 'isucon-multi-agent.html', updated: '2026-11-09', category: 'ai' },
   { key: 'aiDistillation', url: 'ai-distillation.html', updated: '2026-11-09', category: 'ai' },
   { key: 'sessionCookie', url: 'session-cookie.html', updated: '2026-11-08', category: 'identity' },
