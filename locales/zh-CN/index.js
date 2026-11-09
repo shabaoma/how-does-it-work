@@ -1,6 +1,7 @@
 const zhContent = require('./content.json');
 const zhMetadata = require('./topics.js');
 const zhSteps = {
+  cachePenetration: require('./steps/cache-penetration'),
   isuconAgents: require('./steps/isucon-multi-agent'),
   aiDistillation: require('./steps/ai-distillation'),
   dropboxSync: require('./steps/dropbox-sync'),
