@@ -55,7 +55,3 @@ Choose a topic from the home page, or use the topic navigation to move between p
 3. Explore the additional notes for different scenarios and important limitations.
 
 The pages describe common flows. Details may vary depending on the product and how it works.
-
-## Languages
-
-Use the language selector to switch between English and Simplified Chinese.
