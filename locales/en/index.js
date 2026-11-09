@@ -27,7 +27,7 @@ const topics = Object.fromEntries(Object.keys(metadata).map(key => [key, { ...co
 const en = {
   code: 'en', prefix: 'en', name: 'English', topics,
   categories: { ai: 'Artificial intelligence', identity: 'Identity and login', integration: 'Service integration', distributed: 'Distributed systems', payments: 'Payments', cloud: 'Cloud services' },
-  home: { title: 'How technology works', description: 'Understand technology through diagrams and step-by-step explanations.', lead: 'Explore common technologies through their participants, data flows, and key boundaries.', footer: 'These pages illustrate common flows; consult the relevant protocols and implementations for actual behavior.' },
+  home: { title: 'How It Works', description: 'Understand technology through diagrams and step-by-step explanations.', lead: 'Explore common technologies through their participants, data flows, and key boundaries.', footer: 'These pages illustrate common flows; consult the relevant protocols and implementations for actual behavior.' },
   ui: { updated: 'Last updated', language: 'Language', guide: 'GUIDE', explore: 'Explore topics', count: 'topics', topics: 'Topics', navigation: 'Topics', home: 'Home', steps: 'Step by step', flowSteps: 'Flow steps', previous: 'Previous', next: 'Next', detail: 'What happens in this step', loading: 'Loading diagram…', diagramError: 'The diagram could not be loaded. Please refresh and try again.', progress: 'Step {current} of {total}', overview: 'Overview', boundaries: 'Key boundaries', exploreFlow: 'Explore the flow →' }
 };
 module.exports = en;

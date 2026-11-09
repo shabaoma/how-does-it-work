@@ -1,7 +1,7 @@
 const topicDefinitions = require('./topics');
 const localeDefinitions = require('./locales');
 // Update when the home page content or topic listing changes.
-const homeUpdated = '2026-11-09';
+const homeUpdated = '2026-11-10';
 const validDate = value => {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const parsed = new Date(value + 'T00:00:00Z');
