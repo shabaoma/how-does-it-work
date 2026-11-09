@@ -8,7 +8,7 @@ permalink: "{{ localizedPage.url }}"
 eleventyComputed:
   title: "{{ localizedPage.topic.pageTitle or localizedPage.topic.title or localizedPage.locale.home.title }}"
   heading: "{{ localizedPage.topic.heading or localizedPage.topic.title or localizedPage.locale.home.title }}"
-  lead: "{{ localizedPage.topic.lead or localizedPage.locale.home.lead }}"
+  lead: "{{ (localizedPage.topic.lead or localizedPage.locale.home.lead) | safe }}"
   description: "{{ localizedPage.topic.description or localizedPage.locale.home.description }}"
   footer: "{{ (localizedPage.topic.footer or localizedPage.locale.home.footer) | safe }}"
 ---
