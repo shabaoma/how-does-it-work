@@ -2,6 +2,9 @@
 // # 后面是分类 key，其后的主题属于该分类；移动分类时请连同它的主题一起移动。
 // 每个主题 key 必须出现一次，且与 topics.js 中的分类一致。
 module.exports = [
+  '# engineering',
+  'releaseMethods',
+
   '# ai',
   'isuconAgents',
   'aiDistillation',

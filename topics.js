@@ -1,4 +1,5 @@
 const topics = [
+  { key: 'releaseMethods', url: 'release-methods.html', updated: '2026-11-10', category: 'engineering' },
   { key: 'cognitoIdentityPool', url: 'cognito-identity-pool.html', updated: '2026-11-09', category: 'cloud' },
   { key: 'cachePenetration', url: 'cache-penetration.html', updated: '2026-11-09', category: 'distributed' },
   { key: 'isuconAgents', url: 'isucon-multi-agent.html', updated: '2026-11-09', category: 'ai' },

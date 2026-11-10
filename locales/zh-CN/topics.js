@@ -1,4 +1,5 @@
 module.exports = {
+  releaseMethods: { label: '软件发布方法', title: '软件发布的几种方法', description: '比较发布分支、主干发布、维护分支及交付策略。' },
   cognitoIdentityPool: { label: 'Cognito 身份池', title: 'Cognito Identity ID 与身份池', description: '了解登录身份如何获取 Identity ID 和临时 AWS 凭证。' },
   cachePenetration: { label: '缓存穿透', title: '缓存穿透', description: '了解不存在的键为何反复访问数据库，以及如何减少负载。' },
   isuconAgents: { label: 'ISUCON 多 Agent 优化', title: '一个人如何用多 Agent 参加 ISUCON', description: '了解自主优化中的角色分工、实验反馈和停止决策。' },
