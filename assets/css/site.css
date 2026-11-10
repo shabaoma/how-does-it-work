@@ -132,7 +132,6 @@ button.nav:disabled { opacity: 1; color: var(--muted); background: var(--bg); bo
 }
 @media (max-width: 480px) {
   h1 { overflow-wrap: anywhere; }
-  .zh-home-heading { font-size: min(24px, 5.2vw); white-space: nowrap; }
   .step-heading { align-items: flex-start; }
   .navs button { flex: 1; }
   .topic-card { min-height: 0; }
