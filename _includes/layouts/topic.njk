@@ -51,7 +51,7 @@
             {% endif %}
           {% endfor %}
         </nav>
-        <h1>{{ heading }}</h1>
+        <h1>{% if not localizedTopic and locale.home.headingParts %}{{ locale.home.headingParts[0] }}<span class="home-heading-suffix">{{ locale.home.headingParts[1] }}</span>{% else %}{{ heading }}{% endif %}</h1>
         <p class="lead">{{ lead | safe }}</p>
         <p class="updated">{{ locale.ui.updated }}: <time datetime="{{ localizedPage.updated }}">{{ localizedPage.updated }}</time></p>
       </header>

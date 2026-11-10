@@ -131,7 +131,8 @@ button.nav:disabled { opacity: 1; color: var(--muted); background: var(--bg); bo
   .layout > .panel { height: auto; }
 }
 @media (max-width: 480px) {
-  h1 { text-wrap: balance; overflow-wrap: anywhere; }
+  h1 { overflow-wrap: anywhere; }
+  .home-heading-suffix { display: block; }
   .step-heading { align-items: flex-start; }
   .navs button { flex: 1; }
   .topic-card { min-height: 0; }
