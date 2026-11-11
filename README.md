@@ -1,4 +1,4 @@
-# How Does It Work?
+# How It Works
 
 This site uses diagrams and step-by-step explanations to make familiar technologies easier to understand. Explore questions such as how email codes help you sign in, how banks verify cardholders during online payments, and how cloud services manage access.
 
@@ -12,42 +12,50 @@ npm run serve
 
 ## Topics
 
-**Software development**
+**Software engineering**
 
+- How software releases work
 - Waterfall development flow
 - Agile development flow (Scrum example)
 
 **Artificial intelligence**
 
-- AI model distillation
-- Multi-agent ISUCON optimization
+- How agents optimized an ISUCON entry
+- How AI model distillation works
+- How Codex runs MCP
 
-**Identity and sign-in**
+**Distributed systems**
+
+- How Dropbox syncs across devices
+- How Notion syncs across devices
+- How to design a social network
+- Cache penetration
+- Cache updates and invalidation
+
+**Identity and login**
 
 - Session cookie login
 - Access tokens and secret tokens
-- Single sign-on: login and logout
+- External SSO login and logout
 - OAuth 2.0 authorization code and PKCE
 - OpenID Connect login
 - Email verification code login
 
-**Service integration**
+**Cloud services**
 
-- Webhook event notifications
-
-**Distributed systems**
-
-- Cache updates and invalidation
+- Cognito identity pools and identity IDs
+- How AWS STS works
+- How AWS IAM works
+- AWS Systems Manager
 
 **Payments**
 
 - 3D Secure payment authentication
 - Payment idempotency
 
-**Cloud services**
+**Service integration**
 
-- AWS STS temporary credentials
-- AWS IAM permissions
+- Webhook event notifications
 
 Choose a topic from the home page, or use the topic navigation to move between pages.
 
@@ -58,7 +66,3 @@ Choose a topic from the home page, or use the topic navigation to move between p
 3. Explore the additional notes for different scenarios and important limitations.
 
 The pages describe common flows. Details may vary depending on the product and how it works.
-
-## Languages
-
-Use the language selector to switch between English and Simplified Chinese.

@@ -1,6 +1,6 @@
 ---
 name: how-it-works-page
-description: 在 how-does-it-work 项目中新增或修改技术主题页面时使用，按项目规范编写多语言流程图和分步讲解。
+description: 在 how-it-works 项目中新增或修改技术主题页面时使用，按项目规范编写多语言流程图和分步讲解。
 ---
 
 # 技术主题页面

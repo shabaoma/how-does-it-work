@@ -201,6 +201,36 @@
     "overviewNote": "多 Agent 的关键分工是主 Agent 负责执行与决策，审计子 Agent 提供独立检查；比赛过程仍由测试和规则约束。",
     "supplement": "<section class=\"panel supplement\"><h2>从案例中学习什么</h2><ul><li><strong>架构实验：</strong>复盘描述了集中排序写入、操作日志复制和本地读取；这是单一排序节点的方案，不等同于 Raft 共识，故障和一致性边界需要单独设计。</li><li><strong>观测驱动：</strong>通过基准测试、日志和 pprof 寻找瓶颈，再比较修改前后的结果；测试分数变化不能都归因于单个改动。</li><li><strong>比赛目标：</strong>复盘中通过延迟部分低权重地区请求改善评分。这是对特定负载与评分规则的适配，不应直接用于生产系统。</li><li><strong>生产边界：</strong>简化图片验证、单点写入和特定内存参数可能影响正确性、可用性或用户体验，需要按实际业务重新评估。</li></ul><p>相关主题：<a href=\"ai-distillation.html\">AI 模型蒸馏</a> · <a href=\"codex-mcp.html\">Codex 和 MCP</a></p></section>"
   },
+  "cachePenetration": {
+    "title": "缓存穿透",
+    "heading": "缓存穿透：不存在的数据为何反复访问数据库",
+    "lead": "当请求的记录不存在，应用查缓存未命中、再查数据库也没有结果。如果没有缓存这个结果，后续相同请求会重复访问数据库；大量请求可能压垮数据库。下面以按需加载缓存的商品查询为例。",
+    "footer": "本页以缓存旁路读取为例。继续了解 <a href=\"cache-invalidation.html\">缓存更新与失效</a>。",
+    "overviewTitle": "整体流程：未命中后如何避免重复查询",
+    "overview": "flowchart LR\n    U[客户端] -->|查询商品| A[应用]\n    A -->|查询键| C[缓存]\n    C -.->|未命中| A\n    A -->|查询记录| D[(数据库)]\n    D -->|记录或不存在| A\n    A -.->|按策略缓存结果| C\n    A -->|返回结果| U",
+    "overviewNote": "虚线表示条件路径：缓存未命中时才查询数据库；是否回填空值取决于策略。缓存正常命中和穿透都可能从未命中开始，但穿透的关键是不存在的记录反复落到数据库。",
+    "supplement": "<section class=\"panel supplement\"><h2>防护方法与边界</h2><ul><li><strong>空值缓存：</strong>只在权威数据源确认不存在后写入明确的空值标记，设置较短的生存时间（TTL）；数据库超时或错误不能当作不存在。大量不同的不存在键仍会消耗缓存空间并首次访问数据库。</li><li><strong>布隆过滤器：</strong>在查询前判断键是否可能存在；可能误报存在，所以仍要查缓存或数据库。只有过滤器完整且与数据更新正确同步时，判定不存在才能安全拦截。新增记录前应先让过滤器包含该键，重建或异常期间应有回退策略。</li><li><strong>输入校验与限流：</strong>拒绝格式无效的键并限制请求速率；合法格式但不存在的键仍可能穿透，需要结合其他措施。</li><li><strong>新增与过期：</strong>创建原本不存在的记录后应删除或更新对应空值标记；删除失败、并发回填或复制延迟仍可能导致短暂误报不存在，应按业务一致性要求处理。</li></ul><p>缓存击穿通常指热点键过期后并发回源；缓存雪崩通常指大量键同时失效或缓存不可用。它们与缓存穿透的触发条件不同。</p></section>"
+  },
+  "cognitoIdentityPool": {
+    "title": "Cognito Identity ID 与身份池",
+    "heading": "Cognito 身份池如何获取临时 AWS 凭证",
+    "lead": "Amazon Cognito 身份池为已认证用户或允许的访客关联 Identity ID，并根据配置的 IAM 角色提供临时 AWS 凭证。这里以 Cognito 用户池登录后的增强流程为例，说明身份、凭证和权限如何衔接。",
+    "footer": "本页介绍身份池增强流程；角色信任策略、资源策略和组织策略等共同影响实际访问。继续了解 <a href=\"aws-sts.html\">AWS STS 临时凭证</a> 和 <a href=\"aws-iam.html\">IAM 权限</a>。",
+    "overviewTitle": "整体流程：登录身份换取临时凭证",
+    "overview": "flowchart LR\n    U[用户] -->|登录| A[客户端应用]\n    A -->|认证| P[用户池]\n    P -->|ID 令牌| A\n    A -->|令牌和身份池 ID| C[Cognito 身份池]\n    C -->|Identity ID 和临时凭证| A\n    C -->|根据角色配置获取凭证| S[AWS STS]\n    A -->|使用临时凭证签名请求| R[AWS 服务]\n    R -->|按策略检查权限| I[IAM 策略]",
+    "overviewNote": "图中将获取 Identity ID 与获取凭证合并展示；实际增强流程通常分别调用 GetId 和 GetCredentialsForIdentity。身份池也可以配置其他身份提供方，或选择启用访客访问。",
+    "supplement": "<section class=\"panel supplement\"><h2>区分身份、令牌与权限</h2><ul><li><strong>用户池与身份池：</strong>用户池负责用户目录和登录，签发令牌；身份池把受支持的登录身份或访客映射为联合身份，并提供访问 AWS 的临时凭证。两者可以一起使用，也可以分别使用。</li><li><strong>Identity ID：</strong>它是身份池内联合身份的标识，通常形如 <code>region:uuid</code>；它不是密码、登录令牌或 AWS 访问密钥，也不应单独作为服务端认证或授权依据。身份关联或合并时标识可能变化。</li><li><strong>角色和权限：</strong>身份池按认证状态和角色映射配置选择 IAM 角色；角色信任策略需限制身份池与认证状态。临时凭证的有效权限还受角色权限、资源策略及其他适用策略约束。</li><li><strong>访客与生命周期：</strong>只有启用未认证身份时访客才能获取凭证，权限应单独收紧。临时凭证会过期；客户端需按 SDK 流程刷新凭证，必要时先刷新登录令牌。不要把长期密钥放进客户端。</li></ul><p>参考：<a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/identity-pools.html\">Amazon Cognito 身份池</a> · <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/authentication-flow.html\">身份池认证流程</a></p></section>"
+  },
+  "releaseMethods": {
+    "title": "软件发布的几种方法",
+    "heading": "软件发布的几种方法",
+    "lead": "软件发布要决定哪些改动进入版本、如何验证以及如何交付给用户。团队可以从主干直接发布，也可以建立 release branch（发布分支）稳定版本；标签、自动化和渐进发布则可以与这些分支策略组合。",
+    "overviewTitle": "整体流程：从代码到用户",
+    "overview": "flowchart LR\n    D[开发者] -->|合并改动| M[主干]\n    M -->|选择提交| B[发布候选]\n    B -->|构建 测试| C[持续集成]\n    C -->|验证通过| A[版本制品]\n    A -->|部署或交付| U[用户]\n    B -.->|可选标记版本| T[版本标签]",
+    "overviewNote": "发布候选可以来自发布分支，也可以直接来自主干。虚线表示标签可选；标签标记提交，不会自动保证构建、测试或部署。",
+    "footer": "本页展示常见做法；具体分支保护、审批、发布节奏与回滚方式取决于团队和产品。",
+    "supplement": "<section class=\"panel supplement\"><h2>常见方法比较</h2><div class=\"table-scroll\"><table><thead><tr><th>方法</th><th>如何工作</th><th>适用场景与代价</th></tr></thead><tbody><tr><td>发布分支</td><td>从主干切出候选版本，在分支上验证并修复，再发布。</td><td>适合需要稳定窗口或计划版本；要同步修复并承担分支维护成本。</td></tr><tr><td>主干发布</td><td>从经过验证的主干提交构建并发布。</td><td>适合频繁交付；需要可靠的自动化测试、集成和回滚。</td></tr><tr><td>维护分支</td><td>为已发布的旧版本保留分支，选择性回移修复并发布补丁。</td><td>适合同时支持多个版本；回移与兼容性测试会增加成本。</td></tr><tr><td>持续交付或持续部署</td><td>流水线持续验证可发布的构建；持续交付可有人工发布决定，持续部署则在检查通过后自动部署。</td><td>缩短交付周期，但依赖监控、测试、发布控制和故障恢复。</td></tr></tbody></table></div><p><strong>标签和 Release：</strong>Git 标签指向特定提交；托管平台的 Release 通常围绕标签附加说明和制品。它们可以与上述分支策略结合，标签本身不是部署。</p><p><strong>部署方式：</strong>金丝雀发布和蓝绿部署控制新版本如何进入生产环境，与分支策略正交。逐步放量需要监控和明确回滚条件；功能开关可延后开放功能，但需要管理配置及清理旧开关。</p><p class=\"callout warn\">回滚应用不一定能撤销数据库迁移或外部副作用。提前设计向后兼容迁移、数据恢复和回滚方案，并确认旧版本仍能使用现有数据。</p></section>"
+  },
   "waterfall": {
     "title": "Waterfall（瀑布式）开发流程",
     "heading": "Waterfall（瀑布式）开发流程",
