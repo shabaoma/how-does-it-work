@@ -1,6 +1,8 @@
 const content = require('./content.json');
 const metadata = require('./topics');
 const steps = {
+  waterfall: require('./steps/waterfall'),
+  agile: require('./steps/agile'),
   releaseMethods: require('./steps/release-methods'),
   cognitoIdentityPool: require('./steps/cognito-identity-pool'),
   cachePenetration: require('./steps/cache-penetration'),

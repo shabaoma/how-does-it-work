@@ -4,6 +4,8 @@
 module.exports = [
   '# engineering',
   'releaseMethods',
+  'waterfall',
+  'agile',
 
   '# ai',
   'isuconAgents',

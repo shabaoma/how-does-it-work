@@ -1,4 +1,6 @@
 module.exports = {
+  waterfall: { label: 'Waterfall development', title: 'Waterfall development flow', description: 'Follow requirements, design, implementation, verification and release through reviewed phases.' },
+  agile: { label: 'Agile development', title: 'Agile development flow', description: 'Follow small increments, continuous testing, stakeholder feedback and adaptation.' },
   releaseMethods: { label: 'Release methods', title: 'How software releases work', description: 'Compare release branches, trunk releases, maintenance branches, and delivery strategies.' },
   cognitoIdentityPool: { label: 'Cognito identity pools', title: 'Cognito identity pools and identity IDs', description: 'Follow an identity from sign-in to temporary AWS credentials.' },
   cachePenetration: { label: 'Cache penetration', title: 'Cache penetration', description: 'Why missing keys repeatedly reach the database and how to reduce the load.' },

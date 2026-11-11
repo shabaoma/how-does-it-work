@@ -230,5 +230,27 @@
     "overviewNote": "发布候选可以来自发布分支，也可以直接来自主干。虚线表示标签可选；标签标记提交，不会自动保证构建、测试或部署。",
     "footer": "本页展示常见做法；具体分支保护、审批、发布节奏与回滚方式取决于团队和产品。",
     "supplement": "<section class=\"panel supplement\"><h2>常见方法比较</h2><div class=\"table-scroll\"><table><thead><tr><th>方法</th><th>如何工作</th><th>适用场景与代价</th></tr></thead><tbody><tr><td>发布分支</td><td>从主干切出候选版本，在分支上验证并修复，再发布。</td><td>适合需要稳定窗口或计划版本；要同步修复并承担分支维护成本。</td></tr><tr><td>主干发布</td><td>从经过验证的主干提交构建并发布。</td><td>适合频繁交付；需要可靠的自动化测试、集成和回滚。</td></tr><tr><td>维护分支</td><td>为已发布的旧版本保留分支，选择性回移修复并发布补丁。</td><td>适合同时支持多个版本；回移与兼容性测试会增加成本。</td></tr><tr><td>持续交付或持续部署</td><td>流水线持续验证可发布的构建；持续交付可有人工发布决定，持续部署则在检查通过后自动部署。</td><td>缩短交付周期，但依赖监控、测试、发布控制和故障恢复。</td></tr></tbody></table></div><p><strong>标签和 Release：</strong>Git 标签指向特定提交；托管平台的 Release 通常围绕标签附加说明和制品。它们可以与上述分支策略结合，标签本身不是部署。</p><p><strong>部署方式：</strong>金丝雀发布和蓝绿部署控制新版本如何进入生产环境，与分支策略正交。逐步放量需要监控和明确回滚条件；功能开关可延后开放功能，但需要管理配置及清理旧开关。</p><p class=\"callout warn\">回滚应用不一定能撤销数据库迁移或外部副作用。提前设计向后兼容迁移、数据恢复和回滚方案，并确认旧版本仍能使用现有数据。</p></section>"
+  },
+  "waterfall": {
+    "title": "Waterfall（瀑布式）开发流程",
+    "heading": "Waterfall（瀑布式）开发流程",
+    "lead": "瀑布式开发按阶段组织工作：业务方确认需求，开发团队设计并实现系统，测试团队验证后再验收和发布。这里展示常见的阶段评审模式；需求变化或缺陷可能让工作返回前面的阶段。",
+    "overviewKicker": "整体流程",
+    "overviewTitle": "从计划到交付",
+    "overview": "flowchart LR\n R[需求确认] -->|需求基线| D[方案设计]\n D -->|评审后的设计| I[开发实现]\n I -->|集成构建| V[测试验证]\n V -->|验收证据| A[验收与发布]\n A -->|运行中的服务| M[维护]\n V -.->|缺陷或设计问题| I\n M -.->|获批的变更| R",
+    "overviewNote": "实线表示主要阶段交接；虚线表示返工或获批变更。实际返回哪个阶段取决于问题影响范围。",
+    "supplement": "<section class=\"panel supplement\"><h2>瀑布式与敏捷：计划和反馈的区别</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">方面</th><th scope=\"col\">Waterfall 瀑布式</th><th scope=\"col\">Agile 敏捷</th></tr></thead><tbody><tr><th scope=\"row\">计划</th><td>先建立需求基线和阶段计划。</td><td>围绕产品目标规划，并根据新认识调整详细工作。</td></tr><tr><th scope=\"row\">反馈</th><td>通过阶段评审和验收反馈；较晚的集成反馈可能增加返工成本。</td><td>频繁检查可用增量，用反馈指导后续决策。</td></tr><tr><th scope=\"row\">变更</th><td>评估影响后更新相关基线与阶段。</td><td>调整未来工作的优先级，同时保护当前目标和质量。</td></tr><tr><th scope=\"row\">质量</th><td>阶段内评审和测试，再做系统验证。</td><td>通过持续测试让每个增量满足质量要求。</td></tr></tbody></table></div></section><section class=\"panel supplement\"><h2>结合环境选择方法</h2><p>需求稳定、审批明确时，可以考虑阶段式规划；需求不确定且能频繁获得反馈时，可以考虑适应式方法。两者都不能保证成功，都需要风险管理、文档、质量控制和业务参与。团队也可以组合实践，但应明确决策与发布责任。</p><p>参考：<a href=\"https://agilemanifesto.org/iso/zhchs/manifesto.html\">敏捷宣言</a> · <a href=\"https://agilemanifesto.org/iso/zhchs/principles.html\">敏捷原则</a> · <a href=\"https://scrumguides.org/scrum-guide.html\">Scrum 指南</a></p></section>",
+    "footer": "本页展示常见组织方式，具体实践取决于团队与治理要求。另见 <a href=\"agile.html\">Agile 敏捷开发流程</a>。"
+  },
+  "agile": {
+    "title": "Agile（敏捷）开发流程",
+    "heading": "Agile（敏捷）开发流程",
+    "lead": "敏捷开发通过小步交付可用软件，结合反馈不断调整计划，业务方与跨职能团队持续协作。本页用 Scrum 的 Sprint（迭代）作为示例；Agile 的范围更广，并不规定唯一的步骤顺序。",
+    "overviewKicker": "整体流程",
+    "overviewTitle": "从计划到交付",
+    "overview": "flowchart LR\n S[业务方] -->|需求与反馈| B[有序待办列表]\n B -->|目标与选定工作| P[迭代计划]\n P -->|工作计划| D[设计开发与测试]\n D -->|满足完成定义| I[可用增量]\n I -->|检查产品结果| R[迭代评审]\n R -->|调整优先级| B\n R -->|检查工作方式| T[迭代回顾]\n T -->|下次迭代的改进| P\n I -.->|适合时发布| O[运维]",
+    "overviewNote": "循环展示 Scrum 中的检查与调整；虚线发布路径取决于发布条件，无须等待迭代评审。",
+    "supplement": "<section class=\"panel supplement\"><h2>瀑布式与敏捷：计划和反馈的区别</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">方面</th><th scope=\"col\">Waterfall 瀑布式</th><th scope=\"col\">Agile 敏捷</th></tr></thead><tbody><tr><th scope=\"row\">计划</th><td>先建立需求基线和阶段计划。</td><td>围绕产品目标规划，并根据新认识调整详细工作。</td></tr><tr><th scope=\"row\">反馈</th><td>通过阶段评审和验收反馈；较晚的集成反馈可能增加返工成本。</td><td>频繁检查可用增量，用反馈指导后续决策。</td></tr><tr><th scope=\"row\">变更</th><td>评估影响后更新相关基线与阶段。</td><td>调整未来工作的优先级，同时保护当前目标和质量。</td></tr><tr><th scope=\"row\">质量</th><td>阶段内评审和测试，再做系统验证。</td><td>通过持续测试让每个增量满足质量要求。</td></tr></tbody></table></div></section><section class=\"panel supplement\"><h2>结合环境选择方法</h2><p>需求稳定、审批明确时，可以考虑阶段式规划；需求不确定且能频繁获得反馈时，可以考虑适应式方法。两者都不能保证成功，都需要风险管理、文档、质量控制和业务参与。团队也可以组合实践，但应明确决策与发布责任。</p><p>参考：<a href=\"https://agilemanifesto.org/iso/zhchs/manifesto.html\">敏捷宣言</a> · <a href=\"https://agilemanifesto.org/iso/zhchs/principles.html\">敏捷原则</a> · <a href=\"https://scrumguides.org/scrum-guide.html\">Scrum 指南</a></p></section>",
+    "footer": "本页展示常见组织方式，具体实践取决于团队与治理要求。另见 <a href=\"waterfall.html\">Waterfall 瀑布式开发流程</a>。"
   }
 }

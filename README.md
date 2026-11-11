@@ -15,6 +15,8 @@ npm run serve
 **Software engineering**
 
 - How software releases work
+- Waterfall development flow
+- Agile development flow (Scrum example)
 
 **Artificial intelligence**
 
