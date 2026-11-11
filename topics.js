@@ -1,4 +1,6 @@
 const topics = [
+  { key: 'waterfall', url: 'waterfall.html', updated: '2026-11-10', category: 'development' },
+  { key: 'agile', url: 'agile.html', updated: '2026-11-10', category: 'development' },
   { key: 'isuconAgents', url: 'isucon-multi-agent.html', updated: '2026-11-09', category: 'ai' },
   { key: 'aiDistillation', url: 'ai-distillation.html', updated: '2026-11-09', category: 'ai' },
   { key: 'sessionCookie', url: 'session-cookie.html', updated: '2026-11-08', category: 'identity' },

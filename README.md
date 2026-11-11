@@ -12,6 +12,11 @@ npm run serve
 
 ## Topics
 
+**Software development**
+
+- Waterfall development flow
+- Agile development flow (Scrum example)
+
 **Artificial intelligence**
 
 - AI model distillation

@@ -1,4 +1,6 @@
 module.exports = {
+  agile: {"label": "Agile development", "title": "Agile development flow", "description": "Follow small increments, continuous testing, stakeholder feedback and adaptation."},
+  waterfall: {"label": "Waterfall development", "title": "Waterfall development flow", "description": "Follow requirements, design, implementation, verification and release through reviewed phases."},
   isuconAgents: { label: 'ISUCON and agents', title: 'How agents optimized an ISUCON entry', description: 'Follow the roles, experiments and stopping decision in an autonomous competition workflow.' },
   aiDistillation: { label: 'Model distillation', title: 'How AI model distillation works', description: 'See how a student model learns from a teacher model.' },
   socialNetwork: { label: 'Social networks', title: 'How to design a social network', description: 'Explore follows, posts, feeds, and interactions.' },

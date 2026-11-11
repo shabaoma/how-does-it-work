@@ -1,4 +1,6 @@
 module.exports = {
+  agile: {"label": "Agile 敏捷开发", "title": "Agile（敏捷）开发流程", "description": "了解小步交付、持续测试、业务反馈和计划调整如何形成循环。"},
+  waterfall: {"label": "Waterfall 瀑布式开发", "title": "Waterfall（瀑布式）开发流程", "description": "了解需求、设计、实现、验证和发布如何按阶段评审并交接。"},
   isuconAgents: { label: 'ISUCON 多 Agent', title: '一个人如何用多 Agent 参加 ISUCON', description: '了解自主优化中的角色分工、实验反馈和停止决策。' },
   aiDistillation: { label: '模型蒸馏', title: 'AI 模型蒸馏是怎么做的', description: '了解学生模型如何向教师模型学习。' },
   socialNetwork: { label: '社交网络', title: '社交网络如何运作与设计', description: '了解关注、发布、信息流和互动的设计。' },
