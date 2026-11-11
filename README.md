@@ -12,6 +12,10 @@ npm run serve
 
 ## Topics
 
+**Software engineering**
+
+- How software releases work
+
 **Artificial intelligence**
 
 - How agents optimized an ISUCON entry

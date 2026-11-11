@@ -1,6 +1,7 @@
 const zhContent = require('./content.json');
 const zhMetadata = require('./topics.js');
 const zhSteps = {
+  releaseMethods: require('./steps/release-methods'),
   cognitoIdentityPool: require('./steps/cognito-identity-pool'),
   cachePenetration: require('./steps/cache-penetration'),
   isuconAgents: require('./steps/isucon-multi-agent'),
