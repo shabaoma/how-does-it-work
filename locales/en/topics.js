@@ -1,4 +1,6 @@
 module.exports = {
+  cacheAvalanche: {"label": "Cache avalanche", "title": "Cache avalanche", "description": "How many cache entries expiring together or a cache outage can flood the backing service, and how to contain the surge."},
+  cacheBreakdown: {"label": "Cache breakdown", "title": "Cache breakdown", "description": "How concurrent requests for an expired hot key can overload the database, and how request coalescing and stale responses can limit the stampede."},
   waterfall: { label: 'Waterfall development', title: 'Waterfall development flow', description: 'Follow requirements, design, implementation, verification and release through reviewed phases.' },
   agile: { label: 'Agile development', title: 'Agile development flow', description: 'Follow small increments, continuous testing, stakeholder feedback and adaptation.' },
   releaseMethods: { label: 'Release methods', title: 'How software releases work', description: 'Compare release branches, trunk releases, maintenance branches, and delivery strategies.' },

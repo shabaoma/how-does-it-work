@@ -16,6 +16,8 @@ module.exports = [
   'dropboxSync',
   'notionSync',
   'socialNetwork',
+  'cacheBreakdown',
+  'cacheAvalanche',
   'cachePenetration',
   'cacheInvalidation',
 

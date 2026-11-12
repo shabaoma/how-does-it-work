@@ -252,5 +252,27 @@
     "overviewNote": "循环展示 Scrum 中的检查与调整；虚线发布路径取决于发布条件，无须等待迭代评审。",
     "supplement": "<section class=\"panel supplement\"><h2>瀑布式与敏捷：计划和反馈的区别</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">方面</th><th scope=\"col\">Waterfall 瀑布式</th><th scope=\"col\">Agile 敏捷</th></tr></thead><tbody><tr><th scope=\"row\">计划</th><td>先建立需求基线和阶段计划。</td><td>围绕产品目标规划，并根据新认识调整详细工作。</td></tr><tr><th scope=\"row\">反馈</th><td>通过阶段评审和验收反馈；较晚的集成反馈可能增加返工成本。</td><td>频繁检查可用增量，用反馈指导后续决策。</td></tr><tr><th scope=\"row\">变更</th><td>评估影响后更新相关基线与阶段。</td><td>调整未来工作的优先级，同时保护当前目标和质量。</td></tr><tr><th scope=\"row\">质量</th><td>阶段内评审和测试，再做系统验证。</td><td>通过持续测试让每个增量满足质量要求。</td></tr></tbody></table></div></section><section class=\"panel supplement\"><h2>结合环境选择方法</h2><p>需求稳定、审批明确时，可以考虑阶段式规划；需求不确定且能频繁获得反馈时，可以考虑适应式方法。两者都不能保证成功，都需要风险管理、文档、质量控制和业务参与。团队也可以组合实践，但应明确决策与发布责任。</p><p>参考：<a href=\"https://agilemanifesto.org/iso/zhchs/manifesto.html\">敏捷宣言</a> · <a href=\"https://agilemanifesto.org/iso/zhchs/principles.html\">敏捷原则</a> · <a href=\"https://scrumguides.org/scrum-guide.html\">Scrum 指南</a></p></section>",
     "footer": "本页展示常见组织方式，具体实践取决于团队与治理要求。另见 <a href=\"waterfall.html\">Waterfall 瀑布式开发流程</a>。"
+  },
+  "cacheBreakdown": {
+    "title": "缓存击穿",
+    "heading": "缓存击穿",
+    "lead": "缓存击穿也常称为缓存惊群：热门键过期时，大量请求同时未命中缓存，并一起查询数据库。应用、缓存和数据库需要协同回填；请求合并或在允许时短暂返回旧值可以减少重复查询，但各自都有适用边界。",
+    "overviewKicker": "缓存模式",
+    "overviewTitle": "请求与后端如何交互",
+    "overview": "flowchart LR\n U[并发请求] -->|读取热门键| A[应用]\n A -->|键过期或缺失| C[(缓存)]\n A -->|单次回填| D[(数据库)]\n D -->|返回新值| A\n A -->|设置过期时间| C\n A -->|共享结果| U\n A -.->|合并并发未命中| L[请求协调器]",
+    "overviewNote": "只有未命中才会触发回填。协调器可以是进程内 singleflight，也可以是分布式锁；协调范围和故障处理取决于实现。",
+    "supplement": "<section class=\"panel supplement\"><h2>减少缓存惊群的常见方法</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">方法</th><th scope=\"col\">作用</th><th scope=\"col\">适用边界</th></tr></thead><tbody><tr><th scope=\"row\">请求合并</th><td>同一键的并发请求共享一次正在进行的加载。</td><td>进程内协调无法覆盖其他应用实例。</td></tr><tr><th scope=\"row\">分布式锁</th><td>在多个实例间选出一个回填者。</td><td>需要过期时间、有限等待、故障恢复并避免旧持锁者写回数据。</td></tr><tr><th scope=\"row\">过期后异步刷新</th><td>返回近期旧值的同时，由一个工作者刷新。</td><td>仅在业务允许陈旧数据时使用；限制旧值时长并保证刷新持续推进。</td></tr><tr><th scope=\"row\">提前刷新</th><td>热门值硬过期前尝试刷新。</td><td>增加后台负载，不能替代未命中时的请求合并。</td></tr></tbody></table></div><p class=\"callout\">这些方法针对同一个键的并发未命中。大量不同键同时过期属于缓存雪崩，需要更广泛的负载保护。</p></section>",
+    "footer": "本页展示常见 Cache-Aside 防护方式。协调范围、可接受的陈旧度和降级行为取决于系统。"
+  },
+  "cacheAvalanche": {
+    "title": "缓存雪崩",
+    "heading": "缓存雪崩",
+    "lead": "缓存雪崩指大量缓存键同时不可用，常见原因是过期时间集中或缓存服务故障，导致后端收到大量读请求。应用、缓存、数据库和运维团队需要降低同时失效的概率，并在负载激增时限制影响。",
+    "overviewKicker": "缓存模式",
+    "overviewTitle": "请求与后端如何交互",
+    "overview": "flowchart LR\n T[大量键同时过期] -->|并发未命中| A[应用]\n X[缓存服务故障] -->|绕过缓存或报错| A\n A -->|读请求激增| D[(数据库)]\n A -->|随机过期与预热| C[(缓存)]\n A -.->|限流与熔断| G[负载保护]\n G -->|受控降级| U[用户]",
+    "overviewNote": "集中到期与缓存不可用是不同触发原因，但都会把流量推向后端。TTL 随机抖动有助于缓解集中到期，却不能修复缓存故障或弥补数据库容量不足。",
+    "supplement": "<section class=\"panel supplement\"><h2>降低发生概率并限制故障影响</h2><div class=\"table-scroll\"><table><thead><tr><th scope=\"col\">措施</th><th scope=\"col\">主要作用</th><th scope=\"col\">适用边界</th></tr></thead><tbody><tr><th scope=\"row\">TTL 随机抖动</th><td>分散原本会同时到期的一批键。</td><td>不能单独防止缓存故障或热门键击穿。</td></tr><tr><th scope=\"row\">分阶段预热</th><td>重启后逐步恢复重要缓存项。</td><td>需限制速率，避免预热本身制造流量峰值。</td></tr><tr><th scope=\"row\">并发限制与背压</th><td>在流量突增时限制后端负载和排队请求。</td><td>部分请求可能等待或收到受控错误。</td></tr><tr><th scope=\"row\">熔断与降级</th><td>暂停调用不健康依赖，并选择预先定义的响应。</td><td>降级数据可能过时、不完整或不可用，应符合业务安全要求。</td></tr></tbody></table></div><p class=\"callout\">单个热门键到期时，请求合并可减少重复查询。大量键失效或缓存故障时，应组合使用 TTL 抖动、后端保护和恢复控制。</p></section>",
+    "footer": "本页介绍集中到期和缓存不可用的情况。降级选择、恢复节奏和旧数据策略取决于具体服务。"
   }
 }

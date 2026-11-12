@@ -1,4 +1,6 @@
 module.exports = {
+  cacheAvalanche: {"label": "缓存雪崩", "title": "缓存雪崩", "description": "了解大量缓存键同时过期或缓存整体故障如何让请求涌向后端，以及如何限制突发负载。"},
+  cacheBreakdown: {"label": "缓存击穿", "title": "缓存击穿", "description": "了解热门缓存键过期后，并发请求如何压垮数据库，以及请求合并和返回旧值如何抑制请求风暴。"},
   waterfall: { label: 'Waterfall 瀑布式开发', title: 'Waterfall（瀑布式）开发流程', description: '了解需求、设计、实现、验证和发布如何按阶段评审并交接。' },
   agile: { label: 'Agile 敏捷开发', title: 'Agile（敏捷）开发流程', description: '了解小步交付、持续测试、业务反馈和计划调整如何形成循环。' },
   releaseMethods: { label: '软件发布方法', title: '软件发布的几种方法', description: '比较发布分支、主干发布、维护分支及交付策略。' },
