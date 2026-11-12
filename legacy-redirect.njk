@@ -9,6 +9,8 @@ permalink: "{{ legacyPage.url }}"
 <html lang="{{ legacyPage.lang }}">
 <head>
   <meta charset="utf-8">
+  {% set assetPrefix = '' %}
+  {% include "parts/favicon.njk" %}
   {% if legacyPage.url == 'index.html' %}<meta name="google-site-verification" content="WNZPcnzo-j4Z1MqM-Fl12Q0Bx22BrU_TfOUVIWO-QkU">{% endif %}
   <meta http-equiv="refresh" content="0; url={{ legacyPage.target }}">
   <meta name="robots" content="noindex">
