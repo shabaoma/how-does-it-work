@@ -72,6 +72,7 @@ module.exports = function (config) {
   ]);
   config.addFilter('jsonForScript', value => JSON.stringify(value).replace(/</g, '\\u003c'));
   config.addPassthroughCopy('assets');
+  config.addPassthroughCopy({ 'assets/favicon.ico': 'favicon.ico' });
   config.addPassthroughCopy({ 'node_modules/bootstrap/dist/css/bootstrap-grid.min.css': 'assets/css/bootstrap-grid.min.css' });
   return { dir: { input: '.', includes: '_includes', output: 'dist' }, templateFormats: ['html', 'njk'], htmlTemplateEngine: 'njk' };
 };
