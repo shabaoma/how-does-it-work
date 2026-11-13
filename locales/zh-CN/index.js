@@ -1,6 +1,8 @@
 const zhContent = require('./content.json');
 const zhMetadata = require('./topics.js');
 const zhSteps = {
+  cacheBreakdown: require('./steps/cache-breakdown'),
+  cacheAvalanche: require('./steps/cache-avalanche'),
   waterfall: require('./steps/waterfall'),
   agile: require('./steps/agile'),
   releaseMethods: require('./steps/release-methods'),

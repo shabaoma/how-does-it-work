@@ -1,6 +1,8 @@
 const content = require('./content.json');
 const metadata = require('./topics');
 const steps = {
+  cacheBreakdown: require('./steps/cache-breakdown'),
+  cacheAvalanche: require('./steps/cache-avalanche'),
   waterfall: require('./steps/waterfall'),
   agile: require('./steps/agile'),
   releaseMethods: require('./steps/release-methods'),

@@ -30,6 +30,8 @@ npm run serve
 - How Notion syncs across devices
 - How to design a social network
 - Cache penetration
+- Cache breakdown
+- Cache avalanche
 - Cache updates and invalidation
 
 **Identity and login**
